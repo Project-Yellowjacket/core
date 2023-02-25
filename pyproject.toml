@@ -1,0 +1,27 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "core"
+authors = [{name = "Yellowjackets"}]
+readme = "README.md"
+dynamic = ["version", "description"]
+dependencies = [
+    "adafruit-circuitpython-gps     >=3.10.7, <4",
+    "adafruit-circuitpython-icm20x  >=2.0.16, <3",
+    "adafruit-circuitpython-dps310  >=2.1.10, <3",
+    "adafruit-circuitpython-lsm9ds1 >=2.1.19, <3"
+]
+dev_dependancies = ["black"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+# typeshedPath = "typeshed"
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line-length = 120
