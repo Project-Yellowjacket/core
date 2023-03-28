@@ -1,22 +1,7 @@
-[build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
-
-[project]
-name = "core"
-authors = [{name = "Yellowjackets"}]
-readme = "README.md"
-dynamic = ["version", "description"]
-dependencies = [
-    "adafruit-circuitpython-gps     >=3.10.7, <4",
-    "adafruit-circuitpython-icm20x  >=2.0.16, <3",
-    "adafruit-circuitpython-dps310  >=2.1.10, <3",
-    "adafruit-circuitpython-lsm9ds1 >=2.1.19, <3"
-]
-dev_dependancies = ["black"]
-
 [tool.pyright]
 typeCheckingMode = "strict"
+reportMissingModuleSource = "none"
+reportMissingTypeStubs = false
 # typeshedPath = "typeshed"
 
 [tool.black]
@@ -24,4 +9,38 @@ line-length = 120
 
 [tool.isort]
 profile = "black"
+line_length = 120
+
+[tool.ruff]
 line-length = 120
+
+[tool.poe.tasks]
+build = {script = "scripts.build:main", help = "Generate the required files for upload to the board."}
+install = {script = "scripts.install:main", help = "Upload the current contents of the dist folder to the board."}
+develop = {sequence = ["build", "install"], help = "Build and install the current project."}
+_black = "black ."
+_isort = "isort ."
+fmt = {sequence = ["_black", "_isort"], help = "Format all files"}
+
+[tool.poetry]
+name = "core"
+version = "0.1.0"
+description = ""
+authors = ["Yellowjackets"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+adafruit-circuitpython-gps = "^3.10.7"
+adafruit-circuitpython-icm20x = "^2.0.16"
+adafruit-circuitpython-dps310 = "^2.1.10"
+adafruit-circuitpython-lsm9ds1 = "^2.1.19"
+poethepoet = "^0.19.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

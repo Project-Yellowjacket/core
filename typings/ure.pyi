@@ -116,27 +116,27 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import AnyStr, Callable, Generic, Final, Any
+from typing import Any, AnyStr, Callable, Final, Generic
 
 _StrLike: Final = str | bytes
 
 def compile(regex_str: _StrLike, flags: int = ..., /) -> "ure":
     """
-   Compile regular expression, return `regex <regex>` object.
-   """
+    Compile regular expression, return `regex <regex>` object.
+    """
 
 def match(regex_str: _StrLike, string: AnyStr, /) -> "Match[AnyStr]":
     """
-   Compile *regex_str* and match against *string*. Match always happens
-   from starting position in a string.
-   """
+    Compile *regex_str* and match against *string*. Match always happens
+    from starting position in a string.
+    """
 
 def search(regex_str: _StrLike, string: AnyStr, /) -> "Match[AnyStr]":
     """
-   Compile *regex_str* and search it in a *string*. Unlike `match`, this will search
-   string for first position which matches regex (which still may be
-   0 if regex is anchored).
-   """
+    Compile *regex_str* and search it in a *string*. Unlike `match`, this will search
+    string for first position which matches regex (which still may be
+    0 if regex is anchored).
+    """
 
 def sub(
     regex_str: _StrLike,
@@ -147,20 +147,20 @@ def sub(
     /,
 ) -> AnyStr:
     """
-   Compile *regex_str* and search for it in *string*, replacing all matches
-   with *replace*, and returning the new string.
-   
-   *replace* can be a string or a function.  If it is a string then escape
-   sequences of the form ``\<number>`` and ``\g<number>`` can be used to
-   expand to the corresponding group (or an empty string for unmatched groups).
-   If *replace* is a function then it must take a single argument (the match)
-   and should return a replacement string.
-   
-   If *count* is specified and non-zero then substitution will stop after
-   this many substitutions are made.  The *flags* argument is ignored.
-   
-   Note: availability of this function depends on :term:`MicroPython port`.
-   """
+    Compile *regex_str* and search for it in *string*, replacing all matches
+    with *replace*, and returning the new string.
+
+    *replace* can be a string or a function.  If it is a string then escape
+    sequences of the form ``\<number>`` and ``\g<number>`` can be used to
+    expand to the corresponding group (or an empty string for unmatched groups).
+    If *replace* is a function then it must take a single argument (the match)
+    and should return a replacement string.
+
+    If *count* is specified and non-zero then substitution will stop after
+    this many substitutions are made.  The *flags* argument is ignored.
+
+    Note: availability of this function depends on :term:`MicroPython port`.
+    """
 
 DEBUG: Final[int] = ...
 """
@@ -171,24 +171,24 @@ Flag value, display debug information about compiled expression.
 # noinspection PyPep8Naming
 class ure:
     """
-   Compiled regular expression. Instances of this class are created using
-   `re.compile()`.
-   """
+    Compiled regular expression. Instances of this class are created using
+    `re.compile()`.
+    """
 
     def match(self, string: AnyStr, /) -> "Match[AnyStr]":
         """
-      Similar to the module-level functions :meth:`match`, :meth:`search`
-      and :meth:`sub`.
-      Using methods is (much) more efficient if the same regex is applied to
-      multiple strings.
-      """
+        Similar to the module-level functions :meth:`match`, :meth:`search`
+        and :meth:`sub`.
+        Using methods is (much) more efficient if the same regex is applied to
+        multiple strings.
+        """
     def search(self, string: AnyStr, /) -> "Match[AnyStr]":
         """
-      Similar to the module-level functions :meth:`match`, :meth:`search`
-      and :meth:`sub`.
-      Using methods is (much) more efficient if the same regex is applied to
-      multiple strings.
-      """
+        Similar to the module-level functions :meth:`match`, :meth:`search`
+        and :meth:`sub`.
+        Using methods is (much) more efficient if the same regex is applied to
+        multiple strings.
+        """
     def sub(
         self,
         replace: AnyStr | Callable[["Match[AnyStr]"], AnyStr],
@@ -198,58 +198,58 @@ class ure:
         /,
     ) -> AnyStr:
         """
-      Similar to the module-level functions :meth:`match`, :meth:`search`
-      and :meth:`sub`.
-      Using methods is (much) more efficient if the same regex is applied to
-      multiple strings.
-      """
+        Similar to the module-level functions :meth:`match`, :meth:`search`
+        and :meth:`sub`.
+        Using methods is (much) more efficient if the same regex is applied to
+        multiple strings.
+        """
     def split(self, string: AnyStr, max_split: int = -1, /) -> list[AnyStr]:
         """
-      Split a *string* using regex. If *max_split* is given, it specifies
-      maximum number of splits to perform. Returns list of strings (there
-      may be up to *max_split+1* elements if it's specified).
-      """
+        Split a *string* using regex. If *max_split* is given, it specifies
+        maximum number of splits to perform. Returns list of strings (there
+        may be up to *max_split+1* elements if it's specified).
+        """
 
 class Match(Generic[AnyStr]):
     """
-   Match objects as returned by `match()` and `search()` methods, and passed
-   to the replacement function in `sub()`.
-   
-   The name, `Match`, used for typing is not the same as the runtime name, `match` (note lowercase `m`).
-   The reason for this difference is that the runtime uses `match` as both a class name and as a method name and
-   this is not possible within code written entirely in Python and therefore not possible within typing code.
-   """
+    Match objects as returned by `match()` and `search()` methods, and passed
+    to the replacement function in `sub()`.
+
+    The name, `Match`, used for typing is not the same as the runtime name, `match` (note lowercase `m`).
+    The reason for this difference is that the runtime uses `match` as both a class name and as a method name and
+    this is not possible within code written entirely in Python and therefore not possible within typing code.
+    """
 
     def group(self, index: int, /) -> AnyStr:
         """
-      Return matching (sub)string. *index* is 0 for entire match,
-      1 and above for each capturing group. Only numeric groups are supported.
-      """
+        Return matching (sub)string. *index* is 0 for entire match,
+        1 and above for each capturing group. Only numeric groups are supported.
+        """
     def groups(self) -> tuple[AnyStr | Any, ...]:
         """
-      Return a tuple containing all the substrings of the groups of the match.
-      
-      Note: availability of this method depends on :term:`MicroPython port`.
-      """
+        Return a tuple containing all the substrings of the groups of the match.
+
+        Note: availability of this method depends on :term:`MicroPython port`.
+        """
     def start(self, index: int = ..., /) -> int:
         """
-      Return the index in the original string of the start or end of the
-      substring group that was matched.  *index* defaults to the entire
-      group, otherwise it will select a group.
-      
-      Note: availability of these methods depends on :term:`MicroPython port`.
-      """
+        Return the index in the original string of the start or end of the
+        substring group that was matched.  *index* defaults to the entire
+        group, otherwise it will select a group.
+
+        Note: availability of these methods depends on :term:`MicroPython port`.
+        """
     def end(self, index: int = ..., /) -> int:
         """
-      Return the index in the original string of the start or end of the
-      substring group that was matched.  *index* defaults to the entire
-      group, otherwise it will select a group.
-      
-      Note: availability of these methods depends on :term:`MicroPython port`.
-      """
+        Return the index in the original string of the start or end of the
+        substring group that was matched.  *index* defaults to the entire
+        group, otherwise it will select a group.
+
+        Note: availability of these methods depends on :term:`MicroPython port`.
+        """
     def span(self, index: int = ..., /) -> tuple[int, int]:
         """
-      Returns the 2-tuple ``(match.start(index), match.end(index))``.
-      
-      Note: availability of this method depends on :term:`MicroPython port`.
-      """
+        Returns the 2-tuple ``(match.start(index), match.end(index))``.
+
+        Note: availability of this method depends on :term:`MicroPython port`.
+        """
