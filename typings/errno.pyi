@@ -49,7 +49,7 @@ Error codes, based on ANSI C/POSIX standard. All error codes start with
                 print("Directory already exists")
 """
 
-errorcode: Final[Dict[int, str]] = ...
+errorcode: Final[dict[int, str]] = ...
 """
 Dictionary mapping numeric error codes to strings with symbolic error
     code (see above)::

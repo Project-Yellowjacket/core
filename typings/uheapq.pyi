@@ -24,7 +24,7 @@ __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
 from typing import Any, Final, TypeVar
 
-_T: Final = TypeVar("_T")
+_T = TypeVar("_T")
 
 def heappush(heap: list[_T], item: _T, /) -> None:
     """

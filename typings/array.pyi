@@ -10,9 +10,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Final, Generic, MutableSequence, Sequence, Text, TypeVar, overload
+from collections.abc import MutableSequence, Sequence
+from typing import Any, Generic, Text, TypeVar, overload
 
-_T: Final = TypeVar("_T", int, float, Text)
+_T = TypeVar("_T", int, float, str)
 
 # noinspection PyPep8Naming
 class array(MutableSequence[_T], Generic[_T]):

@@ -22,9 +22,9 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Callable, Final, overload
-
-from uio import AnyReadableBuf, AnyWritableBuf
+from _typeshed import AnyReadableBuf
+from collections.abc import Callable
+from typing import Any, TypeAlias, overload
 
 # noinspection SpellCheckingInspection
 class BLE:
@@ -382,7 +382,7 @@ class BLE:
         resp_data: AnyReadableBuf | None = None,
         connectable: bool = True,
     ) -> None:
-        """
+        r"""
         Starts advertising at the specified interval (in **micro**\ seconds). This
         interval will be rounded down to the nearest 625us. To stop advertising, set
         *interval_us* to ``None``.
@@ -396,15 +396,8 @@ class BLE:
         broadcaster to resume advertising with just ``gap_advertise(interval_us)``.
         To clear the advertising payload pass an empty ``bytes``, i.e. ``b''``.
         """
-    def gap_scan(
-        self,
-        duration_ms: int,
-        interval_us: int = 1280000,
-        window_us: int = 11250,
-        active: bool = False,
-        /,
-    ) -> None:
-        """
+    def gap_scan(self, duration_ms: int, interval_us: int = 1280000, window_us: int = 11250, active: bool = False, /) -> None:
+        r"""
         Run a scan operation lasting for the specified duration (in **milli**\ seconds).
 
         To scan indefinitely, set *duration_ms* to ``0``.
@@ -446,7 +439,7 @@ class BLE:
         max_conn_interval_us: int | None = None,
         /,
     ) -> None:
-        """
+        r"""
         Connect to a peripheral.
 
         See :meth:`gap_scan <BLE.gap_scan>` for details about address types.
@@ -505,13 +498,11 @@ class BLE:
 
         When a central connects, the ``_IRQ_CENTRAL_CONNECT`` event will be raised.
         """
-    _Flag: Final = int
-    _Descriptor: Final = tuple["UUID", _Flag]
-    _Characteristic: Final = tuple["UUID", _Flag] | tuple["UUID", _Flag, tuple[_Descriptor, ...]]
-    _Service: Final = tuple["UUID", tuple[_Characteristic, ...]]
-    def gatts_register_services(
-        self, services_definition: tuple[_Service, ...], /
-    ) -> tuple[tuple[memoryview, ...], ...]:
+    _Flag: TypeAlias = int
+    _Descriptor: TypeAlias = tuple["UUID", _Flag]
+    _Characteristic: TypeAlias = tuple["UUID", _Flag] | tuple["UUID", _Flag, tuple[_Descriptor, ...]]
+    _Service: TypeAlias = tuple["UUID", tuple[_Characteristic, ...]]
+    def gatts_register_services(self, services_definition: tuple[_Service, ...], /) -> tuple[tuple[memoryview, ...], ...]:
         """
         Configures the server with the specified services, replacing any
         existing services.
@@ -785,12 +776,7 @@ class BLE:
         device name from the device information service).
         """
     def gattc_discover_characteristics(
-        self,
-        conn_handle: memoryview,
-        start_handle: int,
-        end_handle: int,
-        uuid: UUID | None = None,
-        /,
+        self, conn_handle: memoryview, start_handle: int, end_handle: int, uuid: UUID | None = None, /
     ) -> None:
         """
         Query a connected server for characteristics in the specified range.
@@ -852,14 +838,7 @@ class BLE:
         information about the central that has connected to it (e.g. to read the
         device name from the device information service).
         """
-    def gattc_write(
-        self,
-        conn_handle: memoryview,
-        value_handle: memoryview,
-        data: bytes,
-        mode: int = 0,
-        /,
-    ) -> None:
+    def gattc_write(self, conn_handle: memoryview, value_handle: memoryview, data: bytes, mode: int = 0, /) -> None:
         """
         Issue a remote write to a connected server for the specified
         characteristic or descriptor handle.

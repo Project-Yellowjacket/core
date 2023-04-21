@@ -37,14 +37,14 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf
 from abc import ABC
-from typing import Any, Awaitable, Callable, Coroutine, Dict, Final, Generic, Iterable, TypeVar
+from collections.abc import Awaitable, Callable, Coroutine, Generator, Iterable, Iterator
+from typing import Any, Dict, Generic, TypeAlias, TypeVar
 
-from uio import AnyReadableBuf
-
-_T: Final = TypeVar("_T")
+_T = TypeVar("_T")
 # `Coroutine` `_T` is covariant and `Awaitable` `_T` is invariant.
-_C: Final = Coroutine[Any, None, _T] | Awaitable[_T]
+_C: TypeAlias = Coroutine[Any, None, _T] | Awaitable[_T]
 
 class CancelledError(BaseException):
     """
@@ -74,7 +74,7 @@ def run_until_complete(main_task: Awaitable[_T] | None = None, /):
     Keep scheduling tasks until there are none left to schedule.
     """
 
-def create_task(coro: _C, /) -> Task[_T]:
+def create_task(coro: _C[_T], /) -> Task[_T]:
     """
     Create a new task from the given coroutine and schedule it to run.
 
@@ -86,7 +86,7 @@ def current_task() -> Task[Any] | None:
     Return the `Task` object associated with the currently running task.
     """
 
-def run(coro: _C, /) -> _T:
+def run(coro: _C[_T], /) -> _T:
     """
     Create a new task from the given coroutine and run it until it completes.
 
@@ -144,11 +144,7 @@ StreamReader = "Stream"
 
 StreamWriter = "Stream"
 
-def open_connection(
-    host: str | None,
-    port: str | int | None,
-    /,
-) -> Awaitable[tuple[StreamReader, StreamWriter]]:
+def open_connection(host: str | None, port: str | int | None, /) -> Awaitable[tuple[StreamReader, StreamWriter]]:
     """
     Open a TCP connection to the given *host* and *port*.  The *host* address will be
     resolved using `socket.getaddrinfo`, which is currently a blocking call.
@@ -161,11 +157,7 @@ def open_connection(
     """
 
 def start_server(
-    callback: Callable[[StreamReader, StreamWriter], None],
-    host: str | None,
-    port: str | int | None,
-    backlog: int = 5,
-    /,
+    callback: Callable[[StreamReader, StreamWriter], None], host: str | None, port: str | int | None, backlog: int = 5, /
 ) -> Awaitable[Server]:
     """
     Start a TCP server on the given *host* and *port*.  The *callback* will be
@@ -210,6 +202,8 @@ class Task(Awaitable[_T], Iterable[_T], Generic[_T], ABC):
         ignore this exception.  Cleanup code may be run by trapping it, or via
         ``try ... finally``.
         """
+    def __await__(self) -> Generator[Any, None, _T]: ...
+    def __iter__(self) -> Iterator[_T]: ...
 
 class Event:
     """
@@ -379,7 +373,7 @@ class Loop:
         This represents the object which schedules and runs tasks.  It cannot be
         created, use `get_event_loop` instead.
         """
-    def create_task(self, coro: _C, /) -> Task[_T]:
+    def create_task(self, coro: _C[_T], /) -> Task[_T]:
         """
         Create a task from the given *coro* and return the new `Task` object.
         """
@@ -400,21 +394,21 @@ class Loop:
         """
         Close the event loop.
         """
-    def set_exception_handler(self, handler: Callable[[Loop, Dict[str, Any]], None] | None, /) -> None:
+    def set_exception_handler(self, handler: Callable[[Loop, dict[str, Any]], None] | None, /) -> None:
         """
         Set the exception handler to call when a Task raises an exception that is not
         caught.  The *handler* should accept two arguments: ``(loop, context)``.
         """
-    def get_exception_handler(self) -> Callable[[Loop, Dict[str, Any]], None] | None:
+    def get_exception_handler(self) -> Callable[[Loop, dict[str, Any]], None] | None:
         """
         Get the current exception handler.  Returns the handler, or ``None`` if no
         custom handler is set.
         """
-    def default_exception_handler(self, context: Dict[str, Any], /) -> None:
+    def default_exception_handler(self, context: dict[str, Any], /) -> None:
         """
         The default exception handler that is called.
         """
-    def call_exception_handler(self, context: Dict[str, Any], /) -> None:
+    def call_exception_handler(self, context: dict[str, Any], /) -> None:
         """
         Call the current exception handler.  The argument *context* is passed through and
         is a dictionary containing keys: ``'message'``, ``'exception'``, ``'future'``.

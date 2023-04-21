@@ -82,19 +82,12 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Final, Iterable
+from collections.abc import Iterable
+from typing import Any, Final
 
 from uio import IOBase
 
-def open(
-    stream: IOBase[bytes, Any],
-    /,
-    *,
-    flags: int = 0,
-    pagesize: int = 0,
-    cachesize: int = 0,
-    minkeypage: int = 0,
-) -> _BTree:
+def open(stream: IOBase[bytes, Any], /, *, flags: int = 0, pagesize: int = 0, cachesize: int = 0, minkeypage: int = 0) -> _BTree:
     """
     Open a database from a random-access `stream` (like an open file). All
     other parameters are optional and keyword-only, and allow to tweak advanced
@@ -171,13 +164,7 @@ class _BTree:
         A BTree object can be iterated over directly (similar to a dictionary)
         to get access to all keys in order.
         """
-    def keys(
-        self,
-        start_key: bytes | None = None,
-        end_key: bytes | None = None,
-        flags: int = 0,
-        /,
-    ) -> Iterable[bytes]:
+    def keys(self, start_key: bytes | None = None, end_key: bytes | None = None, flags: int = 0, /) -> Iterable[bytes]:
         """
         These methods are similar to standard dictionary methods, but also can
         take optional parameters to iterate over a key sub-range, instead of
@@ -192,13 +179,7 @@ class _BTree:
         by passing *flags* of `btree.DESC`. The flags values can be ORed
         together.
         """
-    def values(
-        self,
-        start_key: bytes | None = None,
-        end_key: bytes | None = None,
-        flags: int = 0,
-        /,
-    ) -> Iterable[bytes]:
+    def values(self, start_key: bytes | None = None, end_key: bytes | None = None, flags: int = 0, /) -> Iterable[bytes]:
         """
         These methods are similar to standard dictionary methods, but also can
         take optional parameters to iterate over a key sub-range, instead of
@@ -214,11 +195,7 @@ class _BTree:
         together.
         """
     def items(
-        self,
-        start_key: bytes | None = None,
-        end_key: bytes | None = None,
-        flags: int = 0,
-        /,
+        self, start_key: bytes | None = None, end_key: bytes | None = None, flags: int = 0, /
     ) -> Iterable[tuple[bytes, bytes]]:
         """
         These methods are similar to standard dictionary methods, but also can

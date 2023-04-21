@@ -58,27 +58,27 @@ Supported operators and special sequences are:
    Grouping. Each group is capturing (a substring it captures can be accessed
    with `match.group()` method).
 
-``\d``
+``\\d``
    Matches digit. Equivalent to ``[0-9]``.
 
-``\D``
+``\\D``
    Matches non-digit. Equivalent to ``[^0-9]``.
 
-``\s``
+``\\s``
    Matches whitespace. Equivalent to ``[ \t-\r]``.
 
-``\S``
+``\\S``
    Matches non-whitespace. Equivalent to ``[^ \t-\r]``.
 
-``\w``
+``\\w``
    Matches "word characters" (ASCII only). Equivalent to ``[A-Za-z0-9_]``.
 
-``\W``
+``\\W``
    Matches non "word characters" (ASCII only). Equivalent to ``[^A-Za-z0-9_]``.
 
-``\``
+``\\``
    Escape character. Any other character following the backslash, except
-   for those listed above, is taken literally. For example, ``\*`` is
+   for those listed above, is taken literally. For example, ``\\*`` is
    equivalent to literal ``*`` (not treated as the ``*`` operator).
    Note that ``\r``, ``\n``, etc. are not handled specially, and will be
    equivalent to literal letters ``r``, ``n``, etc. Due to this, it's
@@ -92,7 +92,7 @@ Supported operators and special sequences are:
 * counted repetitions (``{m,n}``)
 * named groups (``(?P<name>...)``)
 * non-capturing groups (``(?:...)``)
-* more advanced assertions (``\b``, ``\B``)
+* more advanced assertions (``\b``, ``\\B``)
 * special character escapes like ``\r``, ``\n`` - use Python's own escaping
   instead
 * etc.
@@ -116,9 +116,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, AnyStr, Callable, Final, Generic
+from collections.abc import Callable
+from typing import Any, AnyStr, Final, Generic, TypeAlias
 
-_StrLike: Final = str | bytes
+_StrLike: TypeAlias = str | bytes
 
 def compile(regex_str: _StrLike, flags: int = ..., /) -> "ure":
     """
@@ -139,14 +140,9 @@ def search(regex_str: _StrLike, string: AnyStr, /) -> "Match[AnyStr]":
     """
 
 def sub(
-    regex_str: _StrLike,
-    replace: AnyStr | Callable[["Match[AnyStr]"], AnyStr],
-    string: AnyStr,
-    count: int = 0,
-    flags: int = 0,
-    /,
+    regex_str: _StrLike, replace: AnyStr | Callable[["Match[AnyStr]"], AnyStr], string: AnyStr, count: int = 0, flags: int = 0, /
 ) -> AnyStr:
-    """
+    r"""
     Compile *regex_str* and search for it in *string*, replacing all matches
     with *replace*, and returning the new string.
 
@@ -190,12 +186,7 @@ class ure:
         multiple strings.
         """
     def sub(
-        self,
-        replace: AnyStr | Callable[["Match[AnyStr]"], AnyStr],
-        string: AnyStr,
-        count: int = 0,
-        flags: int = 0,
-        /,
+        self, replace: AnyStr | Callable[["Match[AnyStr]"], AnyStr], string: AnyStr, count: int = 0, flags: int = 0, /
     ) -> AnyStr:
         """
         Similar to the module-level functions :meth:`match`, :meth:`search`

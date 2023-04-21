@@ -13,9 +13,8 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyWritableBuf
 from typing import Final, overload
-
-from uio import AnyWritableBuf
 
 MONO_VLSB: Final[int] = ...
 """
@@ -85,15 +84,7 @@ class FrameBuffer:
         fbuf.hline(0, 9, 96, 0xffff)
     """
 
-    def __init__(
-        self,
-        buffer: AnyWritableBuf,
-        width: int,
-        height: int,
-        format: int,
-        stride: int = ...,
-        /,
-    ):
+    def __init__(self, buffer: AnyWritableBuf, width: int, height: int, format: int, stride: int = ..., /):
         """
         Construct a FrameBuffer object.  The parameters are:
 
@@ -182,15 +173,7 @@ class FrameBuffer:
         Shift the contents of the FrameBuffer by the given vector. This may
         leave a footprint of the previous colors in the FrameBuffer.
         """
-    def blit(
-        self,
-        fbuf: FrameBuffer,
-        x: int,
-        y: int,
-        key: int = -1,
-        pallet: FrameBuffer | None = None,
-        /,
-    ) -> None:
+    def blit(self, fbuf: FrameBuffer, x: int, y: int, key: int = -1, pallet: FrameBuffer | None = None, /) -> None:
         """
         Draw another FrameBuffer on top of the current one at the given coordinates.
         If *key* is specified then it should be a color integer and the

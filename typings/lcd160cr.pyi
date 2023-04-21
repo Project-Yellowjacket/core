@@ -5,19 +5,19 @@ Descriptions taken from:
 https://raw.githubusercontent.com/micropython/micropython/master/docs/library/lcd160cr.rst.
 ===============================================
 
-   
+
 
    .. module:: lcd160cr
       :synopsis: control of LCD160CR display
-   
+
    This module provides control of the MicroPython LCD160CR display.
-   
+
    .. image:: http://micropython.org/resources/LCD160CRv10-persp.jpg
        :alt: LCD160CRv1.0 picture
        :width: 640px
-   
+
    Further resources are available via the following links:
-   
+
    * `LCD160CRv1.0 reference manual <http://micropython.org/resources/LCD160CRv10-refmanual.pdf>`_ (100KiB PDF)
    * `LCD160CRv1.0 schematics <http://micropython.org/resources/LCD160CRv10-schematics.pdf>`_ (1.6MiB PDF)
 """
@@ -27,10 +27,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf, AnyWritableBuf
 from typing import Any, Final, overload
 
 from pyb import I2C, SPI, Pin
-from uio import AnyReadableBuf, AnyWritableBuf
 
 PORTRAIT: Final[str] = ...
 """
@@ -236,15 +236,7 @@ The width and height of the display, respectively, in pixels.  These
         is a dummy byte and should be ignored, and subsequent bytes represent the
         pixels in the line starting at coordinate *(x, y)*.
         """
-    def screen_dump(
-        self,
-        buf: AnyWritableBuf,
-        x: int = 0,
-        y: int = 0,
-        w: int | None = None,
-        h: int | None = None,
-        /,
-    ) -> None:
+    def screen_dump(self, buf: AnyWritableBuf, x: int = 0, y: int = 0, w: int | None = None, h: int | None = None, /) -> None:
         """
         Dump the contents of the screen to the given buffer.  The parameters *x* and *y*
         specify the starting coordinate, and *w* and *h* the size of the region.  If *w*
@@ -266,15 +258,7 @@ The width and height of the display, respectively, in pixels.  These
         """
         Set the foreground and background color of the text.
         """
-    def set_font(
-        self,
-        font: int,
-        scale: int = 0,
-        bold: int = 0,
-        trans: int = 0,
-        scroll: int = 0,
-        /,
-    ) -> None:
+    def set_font(self, font: int, scale: int = 0, bold: int = 0, trans: int = 0, scroll: int = 0, /) -> None:
         """
         Set the font for the text.  Subsequent calls to `write` will use the newly
         configured font.  The parameters are:

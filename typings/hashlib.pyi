@@ -34,63 +34,9 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf
 from abc import ABC
 from typing import overload
-
-from uio import AnyReadableBuf
-
-# noinspection PyPep8Naming
-class sha256("_Hash"):
-    """
-    The current generation, modern hashing algorithm (of SHA2 series).
-    It is suitable for cryptographically-secure purposes. Included in the
-    MicroPython core and any board is recommended to provide this, unless
-    it has particular code size constraints.
-    """
-
-    @overload
-    def __init__(self):
-        """
-        Create an SHA256 hasher object and optionally feed ``data`` into it.
-        """
-    @overload
-    def __init__(self, data: AnyReadableBuf):
-        """
-        Create an SHA256 hasher object and optionally feed ``data`` into it.
-        """
-
-# noinspection PyPep8Naming
-class sha1("_Hash"):
-    """
-    A previous generation algorithm. Not recommended for new usages,
-    but SHA1 is a part of number of Internet standards and existing
-    applications, so boards targeting network connectivity and
-    interoperability will try to provide this.
-    """
-
-    @overload
-    def __init__(self):
-        """
-        Create an SHA1 hasher object and optionally feed ``data`` into it.
-        """
-    @overload
-    def __init__(self, data: AnyReadableBuf):
-        """
-        Create an SHA1 hasher object and optionally feed ``data`` into it.
-        """
-
-# noinspection PyPep8Naming
-class md5("_Hash"):
-    """
-    A legacy algorithm, not considered cryptographically secure. Only
-    selected boards, targeting interoperability with legacy applications,
-    will offer this.
-    """
-
-    def __init__(self, data: AnyReadableBuf = ..., /):
-        """
-        Create an MD5 hasher object and optionally feed ``data`` into it.
-        """
 
 class _Hash(ABC):
     """
@@ -110,4 +56,57 @@ class _Hash(ABC):
         """
         This method is NOT implemented. Use ``binascii.hexlify(hash.digest())``
         to achieve a similar effect.
+        """
+
+# noinspection PyPep8Naming
+class sha256(_Hash):
+    """
+    The current generation, modern hashing algorithm (of SHA2 series).
+    It is suitable for cryptographically-secure purposes. Included in the
+    MicroPython core and any board is recommended to provide this, unless
+    it has particular code size constraints.
+    """
+
+    @overload
+    def __init__(self):
+        """
+        Create an SHA256 hasher object and optionally feed ``data`` into it.
+        """
+    @overload
+    def __init__(self, data: AnyReadableBuf):
+        """
+        Create an SHA256 hasher object and optionally feed ``data`` into it.
+        """
+
+# noinspection PyPep8Naming
+class sha1(_Hash):
+    """
+    A previous generation algorithm. Not recommended for new usages,
+    but SHA1 is a part of number of Internet standards and existing
+    applications, so boards targeting network connectivity and
+    interoperability will try to provide this.
+    """
+
+    @overload
+    def __init__(self):
+        """
+        Create an SHA1 hasher object and optionally feed ``data`` into it.
+        """
+    @overload
+    def __init__(self, data: AnyReadableBuf):
+        """
+        Create an SHA1 hasher object and optionally feed ``data`` into it.
+        """
+
+# noinspection PyPep8Naming
+class md5(_Hash):
+    """
+    A legacy algorithm, not considered cryptographically secure. Only
+    selected boards, targeting interoperability with legacy applications,
+    will offer this.
+    """
+
+    def __init__(self, data: AnyReadableBuf = ..., /):
+        """
+        Create an MD5 hasher object and optionally feed ``data`` into it.
         """

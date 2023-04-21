@@ -27,14 +27,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf, AnyWritableBuf
 from typing import Any
 
-from uio import AnyReadableBuf, AnyWritableBuf
-
-def calcsize(
-    fmt: str | bytes,
-    /,
-) -> int:
+def calcsize(fmt: str | bytes, /) -> int:
     """
     Return the number of bytes needed to store the given *fmt*.
     """

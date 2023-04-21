@@ -19,12 +19,13 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Dict, Final, Generic, Iterable, Mapping, Type, TypeVar, overload
+from collections.abc import Iterable, Mapping
+from typing import Any, Dict, Generic, Type, TypeVar, overload
 
-_KT: Final = TypeVar("_KT")
-_VT: Final = TypeVar("_VT")
+_KT = TypeVar("_KT")
+_VT = TypeVar("_VT")
 
-def namedtuple(name: str, fields: str | Iterable[str]) -> Type[tuple[Any, ...]]:
+def namedtuple(name: str, fields: str | Iterable[str]) -> type[tuple[Any, ...]]:
     """
     This is factory function to create a new namedtuple type with a specific
     name and set of fields. A namedtuple is a subclass of tuple which allows
@@ -88,98 +89,8 @@ class deque:
         Raises IndexError if no items are present.
         """
 
-class OrderedDict(Dict[_KT, _VT], Generic[_KT, _VT]):
-    """
-    W
-    h
-    e
-    n
-
-    o
-    r
-    d
-    e
-    r
-    e
-    d
-
-    d
-    i
-    c
-    t
-
-    i
-    s
-
-    i
-    t
-    e
-    r
-    a
-    t
-    e
-    d
-
-    o
-    v
-    e
-    r
-    ,
-
-    k
-    e
-    y
-    s
-    /
-    i
-    t
-    e
-    m
-    s
-
-    a
-    r
-    e
-
-    r
-    e
-    t
-    u
-    r
-    n
-    e
-    d
-
-    i
-    n
-
-    t
-    h
-    e
-
-    o
-    r
-    d
-    e
-    r
-
-    t
-    h
-    e
-    y
-
-    w
-    e
-    r
-    e
-
-    a
-    d
-    d
-    e
-    d
-    .
-    """
+class OrderedDict(dict[_KT, _VT], Generic[_KT, _VT]):
+    """When ordered dict is iterated over, keys/items are returned in the order they were added."""
 
     @overload
     def __init__(self):

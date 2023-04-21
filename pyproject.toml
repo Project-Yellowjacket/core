@@ -2,14 +2,17 @@
 typeCheckingMode = "strict"
 reportMissingModuleSource = "none"
 reportMissingTypeStubs = false
+reportShadowedImports = false
 # typeshedPath = "typeshed"
 
 [tool.black]
 line-length = 120
+extend_exclude = "typings"
 
 [tool.isort]
 profile = "black"
 line_length = 120
+extend_exclude = "typings"
 
 [tool.ruff]
 line-length = 120

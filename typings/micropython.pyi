@@ -14,10 +14,11 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Callable, Final, TypeVar, overload
+from collections.abc import Callable
+from typing import Any, TypeVar, overload
 
-_T: Final = TypeVar("_T")
-_F: Final = TypeVar("_F", bound=Callable[..., Any])
+_T = TypeVar("_T")
+_F = TypeVar("_F", bound=Callable[..., Any])
 
 def native(func: _F) -> _F:
     """

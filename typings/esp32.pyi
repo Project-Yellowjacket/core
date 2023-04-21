@@ -17,11 +17,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AbstractBlockDev, AnyReadableBuf
 from typing import ClassVar, Final, List, Tuple, overload
 
 from machine import Pin
-from uio import AnyReadableBuf
-from uos import AbstractBlockDev
 
 def wake_on_touch(wake: bool, /) -> None:
     """
@@ -36,7 +35,7 @@ def wake_on_ext0(pin: Pin | None, level: int, /) -> None:
     ``esp32.WAKEUP_ANY_HIGH``.
     """
 
-def wake_on_ext1(pins: List[Pin] | Tuple[Pin, ...] | None, level: int, /) -> None:
+def wake_on_ext1(pins: list[Pin] | tuple[Pin, ...] | None, level: int, /) -> None:
     """
     Configure how EXT1 wakes the device from sleep.  *pins* can be ``None``
     or a tuple/list of valid Pin objects.  *level* should be ``esp32.WAKEUP_ALL_LOW``
@@ -53,7 +52,7 @@ def hall_sensor() -> int:
     Read the raw value of the internal Hall sensor, returning an integer.
     """
 
-def idf_heap_info(capabilities: int) -> List[Tuple[int, int, int, int]]:
+def idf_heap_info(capabilities: int) -> list[tuple[int, int, int, int]]:
     """
     Returns information about the ESP-IDF heap memory regions. One of them contains
     the MicroPython heap and the others are used by ESP-IDF, e.g., for network
@@ -137,7 +136,7 @@ Used in `Partition.find` to specify the partition type: ``APP`` is for bootable
         of the partition to retrieve, or one of the constants: ``BOOT`` or ``RUNNING``.
         """
     @staticmethod
-    def find(type: int = TYPE_APP, subtype: int = 0xFF, label: str | None = None, /) -> List["Partition"]:
+    def find(type: int = TYPE_APP, subtype: int = 0xFF, label: str | None = None, /) -> list["Partition"]:
         """
         Find a partition specified by *type*, *subtype* and *label*.  Returns a
         (possibly empty) list of Partition objects. Note: ``subtype=0xff`` matches any subtype
@@ -221,7 +220,7 @@ class RMT:
         pin: Pin | None = None,
         clock_div: int = 8,
         idle_level: bool = False,
-        tx_carrier: Tuple[int, int, bool] | None = None,
+        tx_carrier: tuple[int, int, bool] | None = None,
     ):
         """
         This class provides access to one of the eight RMT channels. *channel* is
@@ -263,7 +262,7 @@ class RMT:
         current loop iteration will be completed and then transmission will stop.
         """
     @overload
-    def write_pulses(self, duration: List[int] | Tuple[int, ...], data: bool = True, /) -> None:
+    def write_pulses(self, duration: list[int] | tuple[int, ...], data: bool = True, /) -> None:
         """
         Begin transmitting a sequence. There are three ways to specify this:
 
@@ -292,7 +291,7 @@ class RMT:
         supported by the hardware.
         """
     @overload
-    def write_pulses(self, duration: int, data: List[bool] | Tuple[bool, ...], /) -> None:
+    def write_pulses(self, duration: int, data: list[bool] | tuple[bool, ...], /) -> None:
         """
         Begin transmitting a sequence. There are three ways to specify this:
 
@@ -321,12 +320,7 @@ class RMT:
         supported by the hardware.
         """
     @overload
-    def write_pulses(
-        self,
-        duration: List[int] | Tuple[int, ...],
-        data: List[bool] | Tuple[bool, ...],
-        /,
-    ) -> None:
+    def write_pulses(self, duration: list[int] | tuple[int, ...], data: list[bool] | tuple[bool, ...], /) -> None:
         """
         Begin transmitting a sequence. There are three ways to specify this:
 

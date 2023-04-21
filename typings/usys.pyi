@@ -16,7 +16,8 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Callable, Final, Literal, NoReturn
+from collections.abc import Callable
+from typing import Final, Literal, NoReturn
 
 from uio import IOBase
 

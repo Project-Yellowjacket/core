@@ -84,119 +84,25 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf, AnyWritableBuf, _OpenBinaryMode, _OpenFile, _OpenTextMode
 from types import TracebackType
-from typing import AnyStr, Final, Literal, Protocol, Type, TypeVar, overload, runtime_checkable
+from typing import AnyStr, Protocol, Self, Type, TypeVar, overload, runtime_checkable
 
-from uarray import array
-
-_T: Final = TypeVar("_T")
-
-_OpenTextModeUpdating: Final = Literal[
-    "r+",
-    "+r",
-    "rt+",
-    "r+t",
-    "+rt",
-    "tr+",
-    "t+r",
-    "+tr",
-    "w+",
-    "+w",
-    "wt+",
-    "w+t",
-    "+wt",
-    "tw+",
-    "t+w",
-    "+tw",
-    "a+",
-    "+a",
-    "at+",
-    "a+t",
-    "+at",
-    "ta+",
-    "t+a",
-    "+ta",
-    "x+",
-    "+x",
-    "xt+",
-    "x+t",
-    "+xt",
-    "tx+",
-    "t+x",
-    "+tx",
-]
-_OpenTextModeWriting: Final = Literal["w", "wt", "tw", "a", "at", "ta", "x", "xt", "tx"]
-_OpenTextModeReading: Final = Literal["r", "rt", "tr", "U", "rU", "Ur", "rtU", "rUt", "Urt", "trU", "tUr", "Utr"]
-_OpenTextMode: Final = _OpenTextModeUpdating | _OpenTextModeWriting | _OpenTextModeReading
-
-_OpenBinaryModeUpdating: Final = Literal[
-    "rb+",
-    "r+b",
-    "+rb",
-    "br+",
-    "b+r",
-    "+br",
-    "wb+",
-    "w+b",
-    "+wb",
-    "bw+",
-    "b+w",
-    "+bw",
-    "ab+",
-    "a+b",
-    "+ab",
-    "ba+",
-    "b+a",
-    "+ba",
-    "xb+",
-    "x+b",
-    "+xb",
-    "bx+",
-    "b+x",
-    "+bx",
-]
-_OpenBinaryModeWriting: Final = Literal["wb", "bw", "ab", "ba", "xb", "bx"]
-_OpenBinaryModeReading: Final = Literal["rb", "br", "rbU", "rUb", "Urb", "brU", "bUr", "Ubr"]
-_OpenBinaryMode: Final = _OpenBinaryModeUpdating | _OpenBinaryModeReading | _OpenBinaryModeWriting
-
-AnyStr_co: Final = TypeVar("AnyStr_co", str, bytes, covariant=True)
+_T = TypeVar("_T")
 
 @runtime_checkable
-class PathLike(Protocol[AnyStr_co]):
-    def __fspath__(self) -> AnyStr_co: ...
-
-StrOrBytesPath: Final = str | bytes | PathLike[str] | PathLike[bytes]
-_OpenFile: Final = StrOrBytesPath | int
-
-AnyReadableBuf: Final = TypeVar("AnyReadableBuf", bytearray, array, memoryview, bytes)
-"""
-Type that allows bytearray, array, memoryview, or bytes, 
-but only one of these and not a mixture in a single declaration.
-"""
-
-AnyWritableBuf: Final = TypeVar("AnyWritableBuf", bytearray, array, memoryview)
-"""
-Type that allows bytearray, array, or memoryview, but only one of these and not a mixture in a single declaration.
-"""
-
-_Self: Final = TypeVar("_Self")  # The type that extends `IOBase`.
-
-@runtime_checkable
-class IOBase(Protocol[AnyStr, _Self]):
+class IOBase(Protocol[AnyStr]):
     """A `Protocol` (structurally typed) for an IOStream."""
 
     __slots__ = ()
-    def __enter__(self) -> _Self:
+    def __enter__(self) -> Self:
         """
         Called on entry to a `with` block.
         The `with` statement will bind this method’s return value to the target(s) specified in the `as` clause
         of the statement, if any.
         """
     def __exit__(
-        self,
-        exc_type: Type[BaseException] | None,
-        exc_value: BaseException | None,
-        traceback: TracebackType | None,
+        self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None
     ) -> bool | None:
         """
         Called on exit of a `with` block.
@@ -214,7 +120,7 @@ class IOBase(Protocol[AnyStr, _Self]):
         """
         Next string.
         """
-    def __iter__(self) -> _Self:
+    def __iter__(self) -> Self:
         """
         Start new iteration.
         """
@@ -254,26 +160,24 @@ class IOBase(Protocol[AnyStr, _Self]):
         """
     def readline(self, size: int = -1) -> AnyStr:
         """
-                Read and return, as a `str` (text file) or `bytes` (binary file), one line from the stream.
-                If size is specified, at most size bytes will be read.
+        Read and return, as a `str` (text file) or `bytes` (binary file), one line from the stream.
+        If size is specified, at most size bytes will be read.
 
-                The line terminator is always `b'
-        '` for binary files;
-                for text files, the newline argument to `open()` can be used to select the line terminator(s) recognized.
+        The line terminator is always ``b''`` for binary files;
+        for text files, the newline argument to `open()` can be used to select the line terminator(s) recognized.
         """
     def readlines(self, hint: int | None = -1) -> list[AnyStr]:
         """
-                Read and return a list of lines, as a `list[str]` (text file) or `list[bytes]` (binary file), from the stream.
-                `hint` can be specified to control the number of lines read:
-                no more lines will be read if the total size (in bytes/characters) of all lines so far exceeds `hint`.
+        Read and return a list of lines, as a `list[str]` (text file) or `list[bytes]` (binary file), from the stream.
+        `hint` can be specified to control the number of lines read:
+        no more lines will be read if the total size (in bytes/characters) of all lines so far exceeds `hint`.
 
-                `hint` values of 0 or less, as well as `None`, are treated as no hint.
-                The line terminator is always `b'
-        '` for binary files;
-                for text files, the newline argument to `open()` can be used to select the line terminator(s) recognized.
+        `hint` values of 0 or less, as well as `None`, are treated as no hint.
+        The line terminator is always ``b''`` for binary files;
+        for text files, the newline argument to `open()` can be used to select the line terminator(s) recognized.
 
-                *Note* that it’s already possible to iterate on file objects using `for line in file: ...`
-                without calling `file.readlines()`.
+        *Note* that it’s already possible to iterate on file objects using `for line in file: ...`
+        without calling `file.readlines()`.
         """
     def write(self, b: AnyReadableBuf) -> int | None:
         """
@@ -328,7 +232,7 @@ def open(name: _OpenFile, mode: _OpenBinaryMode = ..., /, **kwargs) -> "FileIO":
     *mode* parameter, but support for other arguments vary by port.
     """
 
-class FileIO(IOBase[bytes, "FileIO"]):
+class FileIO(IOBase[bytes]):
     """
     Bytes stream from a file.
     """
@@ -339,7 +243,7 @@ class FileIO(IOBase[bytes, "FileIO"]):
         You should not instantiate this class directly.
         """
 
-class TextIOWrapper(IOBase[str, "TextIOWrapper"]):
+class TextIOWrapper(IOBase[str]):
     """
     Str stream from a file.
     """
@@ -350,7 +254,7 @@ class TextIOWrapper(IOBase[str, "TextIOWrapper"]):
         You should not instantiate this class directly.
         """
 
-class StringIO(IOBase[str, "StringIO"]):
+class StringIO(IOBase[str]):
     """
     Str stream from a str (wrapper).
     """
@@ -398,13 +302,13 @@ class StringIO(IOBase[str, "StringIO"]):
     def getvalue(self) -> str:
         """Get the current contents of the underlying buffer which holds data."""
 
-class BytesIO(IOBase[bytes, "BytesIO"]):
+class BytesIO(IOBase[bytes]):
     """
     Bytes stream from a bytes array (wrapper).
     """
 
     @overload
-    def __init__(self, string: bytes = "", /):
+    def __init__(self, string: bytes = b"", /):
         """
             In-memory file-like objects for input/output. `StringIO` is used for
             text-mode I/O (similar to a normal file opened with "t" modifier).
@@ -432,15 +336,15 @@ class BytesIO(IOBase[bytes, "BytesIO"]):
     @overload
     def __init__(self, alloc_size: int, /):
         """
-            In-memory file-like objects for input/output. `StringIO` is used for
-            text-mode I/O (similar to a normal file opened with "t" modifier).
-            `BytesIO` is used for binary-mode I/O (similar to a normal file
-            opened with "b" modifier). Initial contents of file-like objects
-            can be specified with *string* parameter (should be normal string
-            for `StringIO` or bytes object for `BytesIO`). All the usual file
-            methods like ``read()``, ``write()``, ``seek()``, ``flush()``,
-            ``close()`` are available on these objects, and additionally, a
-            following method:
+        In-memory file-like objects for input/output. `StringIO` is used for
+        text-mode I/O (similar to a normal file opened with "t" modifier).
+        `BytesIO` is used for binary-mode I/O (similar to a normal file
+        opened with "b" modifier). Initial contents of file-like objects
+        can be specified with *string* parameter (should be normal string
+        for `StringIO` or bytes object for `BytesIO`). All the usual file
+        methods like ``read()``, ``write()``, ``seek()``, ``flush()``,
+        ``close()`` are available on these objects, and additionally, a
+        following method:
 
 
         `alloc_size` constructor creates an empty `BytesIO` object,

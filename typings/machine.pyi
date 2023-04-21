@@ -8,7 +8,7 @@ https://raw.githubusercontent.com/micropython/micropython/master/docs/library/ma
 .. module:: machine
    :synopsis: functions related to the hardware
 
-   
+
 
    The ``machine`` module contains specific functions related to the hardware
    on a particular board. Most functions in this module allow to achieve direct
@@ -16,9 +16,9 @@ https://raw.githubusercontent.com/micropython/micropython/master/docs/library/ma
    (like CPU, timers, buses, etc.). Used incorrectly, this can lead to
    malfunction, lockups, crashes of your board, and in extreme cases, hardware
    damage.
-   
+
    .. _machine_callbacks:
-   
+
    A note of callbacks used by functions and class methods of :mod:`machine` module:
    all these callbacks should be considered as executing in an interrupt context.
    This is true for both physical devices with IDs >= 0 and "virtual" devices
@@ -31,10 +31,9 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Callable, ClassVar, Final, NoReturn, Sequence, overload
-
-from uio import AnyReadableBuf, AnyWritableBuf
-from uos import AbstractBlockDev
+from _typeshed import AbstractBlockDev, AnyReadableBuf, AnyWritableBuf
+from collections.abc import Callable, Sequence
+from typing import Any, ClassVar, Final, NoReturn, overload
 
 def reset() -> NoReturn:
     """
@@ -413,15 +412,7 @@ Selects the IRQ trigger type.
 Selects the IRQ trigger type.
    """
     def __init__(
-        self,
-        id: Any,
-        /,
-        mode: int = -1,
-        pull: int = -1,
-        *,
-        value: Any = None,
-        drive: int | None = None,
-        alt: int | None = None,
+        self, id: Any, /, mode: int = -1, pull: int = -1, *, value: Any = None, drive: int | None = None, alt: int | None = None
     ):
         """
         Access the pin peripheral (GPIO pin) associated with the given ``id``.  If
@@ -486,13 +477,7 @@ Selects the IRQ trigger type.
         ``Pin.OPEN_DRAIN``, the alternate function will be removed from the pin.
         """
     def init(
-        self,
-        mode: int = -1,
-        pull: int = -1,
-        *,
-        value: Any = None,
-        drive: int | None = None,
-        alt: int | None = None,
+        self, mode: int = -1, pull: int = -1, *, value: Any = None, drive: int | None = None, alt: int | None = None
     ) -> None:
         """
         Re-initialise the pin using the given parameters.  Only those arguments that
@@ -949,15 +934,7 @@ class PWM:
       will generate PWM with the same 50% duty cycle.
     """
 
-    def __init__(
-        self,
-        dest: Pin | int,
-        /,
-        *,
-        freq: int = ...,
-        duty_u16: int = ...,
-        duty_ns: int = ...,
-    ):
+    def __init__(self, dest: Pin | int, /, *, freq: int = ..., duty_u16: int = ..., duty_ns: int = ...):
         """
         Construct and return a new PWM object using the following parameters:
 
@@ -993,11 +970,7 @@ class PWM:
         method may raise a ``ValueError`` if the frequency is outside the valid range.
         """
     @overload
-    def freq(
-        self,
-        value: int,
-        /,
-    ) -> None:
+    def freq(self, value: int, /) -> None:
         """
         Get or set the current frequency of the PWM output.
 
@@ -1018,11 +991,7 @@ class PWM:
         as the ratio ``value / 65535``.
         """
     @overload
-    def duty_u16(
-        self,
-        value: int,
-        /,
-    ) -> None:
+    def duty_u16(self, value: int, /) -> None:
         """
         Get or set the current duty cycle of the PWM output, as an unsigned 16-bit
         value in the range 0 to 65535 inclusive.
@@ -1042,11 +1011,7 @@ class PWM:
         With a single *value* argument the pulse width is set to that value.
         """
     @overload
-    def duty_ns(
-        self,
-        value: int,
-        /,
-    ) -> None:
+    def duty_ns(self, value: int, /) -> None:
         """
         Get or set the current pulse width of the PWM output, as a value in nanoseconds.
 
@@ -1369,14 +1334,7 @@ IRQ trigger sources
         Send a break condition on the bus. This drives the bus low for a duration
         longer than required for a normal transmission of a character.
         """
-    def irq(
-        self,
-        trigger: int,
-        priority: int = 1,
-        handler: Callable[[UART], None] | None = None,
-        wake: int = IDLE,
-        /,
-    ) -> Any:
+    def irq(self, trigger: int, priority: int = 1, handler: Callable[[UART], None] | None = None, wake: int = IDLE, /) -> Any:
         """
         Create a callback to be triggered when data is received on the UART.
 
@@ -2000,20 +1958,7 @@ for initialising the I2S bus ``format`` to stereo
     """
 for initialising the I2S bus ``format`` to mono
    """
-    def __init__(
-        self,
-        id: int,
-        /,
-        *,
-        sck: Pin,
-        ws: Pin,
-        sd: Pin,
-        mode: int,
-        bits: int,
-        format: int,
-        rate: int,
-        ibuf: int,
-    ):
+    def __init__(self, id: int, /, *, sck: Pin, ws: Pin, sd: Pin, mode: int, bits: int, format: int, rate: int, ibuf: int):
         """
         Construct an I2S object of the given id:
 
@@ -2041,18 +1986,7 @@ for initialising the I2S bus ``format`` to mono
         Increasing the size of the internal buffer has the potential to increase the time that user applications can perform non-I2S operations
         before underflow (e.g. ``write`` method) or overflow (e.g. ``readinto`` method).
         """
-    def init(
-        self,
-        *,
-        sck: Pin,
-        ws: Pin,
-        sd: Pin,
-        mode: int,
-        bits: int,
-        format: int,
-        rate: int,
-        ibuf: int,
-    ) -> None:
+    def init(self, *, sck: Pin, ws: Pin, sd: Pin, mode: int, bits: int, format: int, rate: int, ibuf: int) -> None:
         """
         see Constructor for argument descriptions
         """
@@ -2060,45 +1994,28 @@ for initialising the I2S bus ``format`` to mono
         """
         Deinitialize the I2S bus
         """
-    def readinto(
-        self,
-        buf: AnyWritableBuf,
-        /,
-    ) -> int:
+    def readinto(self, buf: AnyWritableBuf, /) -> int:
         """
         Read audio samples into the buffer specified by ``buf``.  ``buf`` must support the buffer protocol, such as bytearray or array.
         "buf" byte ordering is little-endian.  For Stereo format, left channel sample precedes right channel sample. For Mono format,
         the left channel sample data is used.
         Returns number of bytes read
         """
-    def write(
-        self,
-        buf: AnyReadableBuf,
-        /,
-    ) -> int:
+    def write(self, buf: AnyReadableBuf, /) -> int:
         """
         Write audio samples contained in ``buf``. ``buf`` must support the buffer protocol, such as bytearray or array.
         "buf" byte ordering is little-endian.  For Stereo format, left channel sample precedes right channel sample. For Mono format,
         the sample data is written to both the right and left channels.
         Returns number of bytes written
         """
-    def irq(
-        self,
-        handler: Callable[[], None],
-        /,
-    ) -> None:
+    def irq(self, handler: Callable[[], None], /) -> None:
         """
         Set a callback. ``handler`` is called when ``buf`` is emptied (``write`` method) or becomes full (``readinto`` method).
         Setting a callback changes the ``write`` and ``readinto`` methods to non-blocking operation.
         ``handler`` is called in the context of the MicroPython scheduler.
         """
     @staticmethod
-    def shift(
-        buf: AnyWritableBuf,
-        bits: int,
-        shift: int,
-        /,
-    ) -> None:
+    def shift(buf: AnyWritableBuf, bits: int, shift: int, /) -> None:
         """
         bitwise shift of all samples contained in ``buf``. ``bits`` specifies sample size in bits. ``shift`` specifies the number of bits to shift each sample.
         Positive for left shift, negative for right shift.
@@ -2318,14 +2235,7 @@ irq trigger source
 
         The documentation for RTC is in a poor state; better to experiment and use `dir`!
         """
-    def irq(
-        self,
-        /,
-        *,
-        trigger: int,
-        handler: Callable[[RTC], None] | None = None,
-        wake: int = IDLE,
-    ) -> None:
+    def irq(self, /, *, trigger: int, handler: Callable[[RTC], None] | None = None, wake: int = IDLE) -> None:
         """
         Create an irq object triggered by a real time clock alarm.
 
@@ -2377,15 +2287,7 @@ Timer operating mode.
         See ``init`` for parameters of initialisation.
         """
     @overload
-    def __init__(
-        self,
-        id: int,
-        /,
-        *,
-        mode: int = PERIODIC,
-        period: int = -1,
-        callback: Callable[[Timer], None] | None = None,
-    ):
+    def __init__(self, id: int, /, *, mode: int = PERIODIC, period: int = -1, callback: Callable[[Timer], None] | None = None):
         """
         Construct a new timer object of the given ``id``. ``id`` of -1 constructs a
         virtual timer (if supported by a board).
@@ -2393,13 +2295,7 @@ Timer operating mode.
 
         See ``init`` for parameters of initialisation.
         """
-    def init(
-        self,
-        *,
-        mode: int = PERIODIC,
-        period: int = -1,
-        callback: Callable[[Timer], None] | None = None,
-    ) -> None:
+    def init(self, *, mode: int = PERIODIC, period: int = -1, callback: Callable[[Timer], None] | None = None) -> None:
         """
         Initialise the timer. Example::
 
@@ -2491,21 +2387,11 @@ class SD:
         # do normal file operations
     """
 
-    def __init__(
-        self,
-        id: int = 0,
-        pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"),
-        /,
-    ):
+    def __init__(self, id: int = 0, pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"), /):
         """
         Create a SD card object. See ``init()`` for parameters if initialization.
         """
-    def init(
-        self,
-        id: int = 0,
-        pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"),
-        /,
-    ) -> None:
+    def init(self, id: int = 0, pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"), /) -> None:
         """
         Enable the SD card. In order to initialize the card, give it a 3-tuple:
         ``(clk_pin, cmd_pin, dat0_pin)``.

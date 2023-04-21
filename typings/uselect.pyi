@@ -19,7 +19,8 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Final, Iterable, Iterator
+from collections.abc import Iterable, Iterator
+from typing import Any, Final
 
 from uio import IOBase
 
@@ -41,11 +42,7 @@ def poll() -> "Poll":
     """
 
 def select(
-    rlist: Iterable[Any],
-    wlist: Iterable[Any],
-    xlist: Iterable[Any],
-    timeout: int = -1,
-    /,
+    rlist: Iterable[Any], wlist: Iterable[Any], xlist: Iterable[Any], timeout: int = -1, /
 ) -> list[tuple[Any, int, Any, ...]]:
     """
     Wait for activity on a set of objects.

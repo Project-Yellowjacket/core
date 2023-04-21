@@ -35,7 +35,8 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Callable, ClassVar, overload
+from collections.abc import Callable
+from typing import ClassVar, overload
 
 class Timer:
     """ """
@@ -157,15 +158,7 @@ class Timer:
            - ``GP11`` on Timer 3 channel B.
         """
     @overload
-    def channel(
-        self,
-        channel: int,
-        /,
-        *,
-        freq: int,
-        polarity: int = POSITIVE,
-        duty_cycle: int = 0,
-    ) -> TimerChannel:
+    def channel(self, channel: int, /, *, freq: int, polarity: int = POSITIVE, duty_cycle: int = 0) -> TimerChannel:
         """
         If only a channel identifier passed, then a previously initialized channel
         object is returned (or ``None`` if there is no previous channel).
@@ -205,15 +198,7 @@ class Timer:
            - ``GP11`` on Timer 3 channel B.
         """
     @overload
-    def channel(
-        self,
-        channel: int,
-        /,
-        *,
-        period: int,
-        polarity: int = POSITIVE,
-        duty_cycle: int = 0,
-    ) -> TimerChannel:
+    def channel(self, channel: int, /, *, period: int, polarity: int = POSITIVE, duty_cycle: int = 0) -> TimerChannel:
         """
         If only a channel identifier passed, then a previously initialized channel
         object is returned (or ``None`` if there is no previous channel).
@@ -264,11 +249,7 @@ class TimerChannel:
     """
 
     def irq(
-        self,
-        *,
-        trigger: int,
-        priority: int = 1,
-        handler: Callable[[Timer], None] | None = None,
+        self, *, trigger: int, priority: int = 1, handler: Callable[[Timer], None] | None = None
     ) -> Callable[[Timer], None] | None:
         """
         The behaviour of this callback is heavily dependent on the operating

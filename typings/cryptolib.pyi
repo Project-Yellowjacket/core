@@ -14,9 +14,8 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf, AnyWritableBuf
 from typing import overload
-
-from uio import AnyReadableBuf, AnyWritableBuf
 
 # noinspection PyPep8Naming
 class aes:

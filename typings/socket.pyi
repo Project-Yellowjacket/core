@@ -66,15 +66,15 @@ Tuple address format for ``socket`` module:
   they should be resolved first using `socket.getaddrinfo()`. Availability
   of IPv6 support depends on a :term:`MicroPython port`.
 
-   
+
 
    .. exception:: socket.error
-   
+
       MicroPython does NOT have this exception.
-   
+
       .. admonition:: Difference to CPython
            :class: attention
-   
+
            CPython used to have a ``socket.error`` exception which is now deprecated,
            and is an alias of `OSError`. In MicroPython, use `OSError` directly.
 """
@@ -84,18 +84,69 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from typing import Any, Final, Literal, overload
+from _typeshed import AnyReadableBuf, AnyWritableBuf
+from typing import Any, Final, Literal, TypeAlias, overload
 
-from uio import AnyReadableBuf, AnyWritableBuf
+_Address: TypeAlias = tuple[str, int] | tuple[str, int, int, int] | str
+AF_INET: Final[int] = ...
+"""
+Address family types. Availability depends on a particular :term:`MicroPython port`.
+"""
 
-_Address: Final = tuple[str, int] | tuple[str, int, int, int] | str
+AF_INET6: Final[int] = ...
+"""
+Address family types. Availability depends on a particular :term:`MicroPython port`.
+"""
 
-def socket(
-    af: int = "AF_INET",
-    type: int = "SOCK_STREAM",
-    proto: int = "IPPROTO_TCP",
-    /,
-) -> "Socket":
+SOCK_STREAM: Final[int] = ...
+"""
+Socket types.
+"""
+
+SOCK_DGRAM: Final[int] = ...
+"""
+Socket types.
+"""
+
+IPPROTO_UDP: Final[int] = ...
+"""
+IP protocol numbers. Availability depends on a particular :term:`MicroPython port`.
+   Note that you don't need to specify these in a call to `socket.socket()`,
+   because `SOCK_STREAM` socket type automatically selects `IPPROTO_TCP`, and
+   `SOCK_DGRAM` - `IPPROTO_UDP`. Thus, the only real use of these constants
+   is as an argument to `setsockopt()`.
+"""
+
+IPPROTO_TCP: Final[int] = ...
+"""
+IP protocol numbers. Availability depends on a particular :term:`MicroPython port`.
+   Note that you don't need to specify these in a call to `socket.socket()`,
+   because `SOCK_STREAM` socket type automatically selects `IPPROTO_TCP`, and
+   `SOCK_DGRAM` - `IPPROTO_UDP`. Thus, the only real use of these constants
+   is as an argument to `setsockopt()`.
+"""
+
+SOL_SOCKET: Final[int] = ...
+"""
+      Socket option levels (an argument to `setsockopt()`). The exact
+      inventory depends on a :term:`MicroPython port`.
+"""
+
+SO_REUSEADDR: Final[int] = ...
+"""
+      Socket options (an argument to `setsockopt()`). The exact
+      inventory depends on a :term:`MicroPython port`.
+"""
+
+IPPROTO_SEC: Final[int] = ...
+"""
+Special protocol value to create SSL-compatible socket.
+
+
+   Constants specific to WiPy:
+"""
+
+def socket(af: int = AF_INET, type: int = SOCK_STREAM, proto: int = IPPROTO_TCP, /) -> "Socket":
     """
     Create a new socket using the given address family, socket type and
     protocol number. Note that specifying *proto* in most cases is not
@@ -110,13 +161,7 @@ def socket(
     """
 
 def getaddrinfo(
-    host: str,
-    port: int,
-    af: int = 0,
-    type: int = 0,
-    proto: int = 0,
-    flags: int = 0,
-    /,
+    host: str, port: int, af: int = 0, type: int = 0, proto: int = 0, flags: int = 0, /
 ) -> list[tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]]:
     """
     Translate the host/port argument into a sequence of 5-tuples that contain all the
@@ -177,64 +222,6 @@ def inet_pton(af: int, txt_addr: str, /) -> bytes:
          >>> socket.inet_pton(socket.AF_INET, "1.2.3.4")
          b'\x01\x02\x03\x04'
     """
-
-AF_INET: Final[int] = ...
-"""
-Address family types. Availability depends on a particular :term:`MicroPython port`.
-"""
-
-AF_INET6: Final[int] = ...
-"""
-Address family types. Availability depends on a particular :term:`MicroPython port`.
-"""
-
-SOCK_STREAM: Final[int] = ...
-"""
-Socket types.
-"""
-
-SOCK_DGRAM: Final[int] = ...
-"""
-Socket types.
-"""
-
-IPPROTO_UDP: Final[int] = ...
-"""
-IP protocol numbers. Availability depends on a particular :term:`MicroPython port`.
-   Note that you don't need to specify these in a call to `socket.socket()`,
-   because `SOCK_STREAM` socket type automatically selects `IPPROTO_TCP`, and
-   `SOCK_DGRAM` - `IPPROTO_UDP`. Thus, the only real use of these constants
-   is as an argument to `setsockopt()`.
-"""
-
-IPPROTO_TCP: Final[int] = ...
-"""
-IP protocol numbers. Availability depends on a particular :term:`MicroPython port`.
-   Note that you don't need to specify these in a call to `socket.socket()`,
-   because `SOCK_STREAM` socket type automatically selects `IPPROTO_TCP`, and
-   `SOCK_DGRAM` - `IPPROTO_UDP`. Thus, the only real use of these constants
-   is as an argument to `setsockopt()`.
-"""
-
-SOL_SOCKET: Final[int] = ...
-"""
-      Socket option levels (an argument to `setsockopt()`). The exact
-      inventory depends on a :term:`MicroPython port`.
-"""
-
-SO_REUSEADDR: Final[int] = ...
-"""
-      Socket options (an argument to `setsockopt()`). The exact
-      inventory depends on a :term:`MicroPython port`.
-"""
-
-IPPROTO_SEC: Final[int] = ...
-"""
-Special protocol value to create SSL-compatible socket.
-
-
-   Constants specific to WiPy:
-"""
 
 class Socket:
     """

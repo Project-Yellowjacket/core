@@ -187,18 +187,17 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf
 from typing import Final
 
-from uio import AnyReadableBuf
-
-_ScalarProperty: Final = int
-_RecursiveProperty: Final = tuple[int, "_property"]
-_ArrayProperty: Final = tuple[int, int]
-_ArrayOfAggregateProperty: Final = tuple[int, int, "_property"]
-_PointerToAPrimitiveProperty: Final = tuple[int, int]
-_PointerToAaAggregateProperty: Final = tuple[int, "_property"]
-_BitfieldProperty: Final = int
-_property: Final = (
+_ScalarProperty: TypeAlias = int
+_RecursiveProperty: TypeAlias = tuple[int, "_property"]
+_ArrayProperty: TypeAlias = tuple[int, int]
+_ArrayOfAggregateProperty: TypeAlias = tuple[int, int, "_property"]
+_PointerToAPrimitiveProperty: TypeAlias = tuple[int, int]
+_PointerToAaAggregateProperty: TypeAlias = tuple[int, "_property"]
+_BitfieldProperty: TypeAlias = int
+_property: TypeAlias = (
     _ScalarProperty
     | _RecursiveProperty
     | _ArrayProperty
@@ -207,7 +206,7 @@ _property: Final = (
     | _PointerToAaAggregateProperty
     | _BitfieldProperty
 )
-_descriptor: Final = tuple[str, _property]
+_descriptor: TypeAlias = tuple[str, _property]
 
 LITTLE_ENDIAN: Final[int] = ...
 """

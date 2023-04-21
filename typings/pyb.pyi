@@ -5,79 +5,79 @@ Descriptions taken from:
 https://raw.githubusercontent.com/micropython/micropython/master/docs/library/pyb.rst.
 =============================================
 
-   
+
 
    Hardware Note
    -------------
-   
+
    The accelerometer uses I2C bus 1 to communicate with the processor. Consequently
    when readings are being taken pins X9 and X10 should be unused (other than for
    I2C). Other devices using those pins, and which therefore cannot be used
    concurrently, are UART 1 and Timer 4 channels 1 and 2.
-   
+
 
    Hardware Note
    -------------
-   
+
    On boards with external spiflash (e.g. Pyboard D), the MicroPython firmware will
    be configured to use that as the primary flash storage. On all other boards, the
    internal flash inside the :term:`MCU` will be used.
-   
+
 
    Flow Control
    ------------
-   
+
    On Pyboards V1 and V1.1 ``UART(2)`` and ``UART(3)`` support RTS/CTS hardware flow control
    using the following pins:
-   
+
        - ``UART(2)`` is on: ``(TX, RX, nRTS, nCTS) = (X3, X4, X2, X1) = (PA2, PA3, PA1, PA0)``
        - ``UART(3)`` is on :``(TX, RX, nRTS, nCTS) = (Y9, Y10, Y7, Y6) = (PB10, PB11, PB14, PB13)``
-   
+
    On the Pyboard Lite only ``UART(2)`` supports flow control on these pins:
-   
+
        ``(TX, RX, nRTS, nCTS) = (X1, X2, X4, X3) = (PA2, PA3, PA1, PA0)``
-   
+
    In the following paragraphs the term "target" refers to the device connected to
    the UART.
-   
+
    When the UART's ``init()`` method is called with ``flow`` set to one or both of
    ``UART.RTS`` and ``UART.CTS`` the relevant flow control pins are configured.
    ``nRTS`` is an active low output, ``nCTS`` is an active low input with pullup
    enabled. To achieve flow control the Pyboard's ``nCTS`` signal should be connected
    to the target's ``nRTS`` and the Pyboard's ``nRTS`` to the target's ``nCTS``.
-   
+
    CTS: target controls Pyboard transmitter
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   
+
    If CTS flow control is enabled the write behaviour is as follows:
-   
+
    If the Pyboard's ``UART.write(buf)`` method is called, transmission will stall for
    any periods when ``nCTS`` is ``False``. This will result in a timeout if the entire
    buffer was not transmitted in the timeout period. The method returns the number of
    bytes written, enabling the user to write the remainder of the data if required. In
    the event of a timeout, a character will remain in the UART pending ``nCTS``. The
    number of bytes composing this character will be included in the return value.
-   
+
    If ``UART.writechar()`` is called when ``nCTS`` is ``False`` the method will time
    out unless the target asserts ``nCTS`` in time. If it times out ``OSError 116``
    will be raised. The character will be transmitted as soon as the target asserts ``nCTS``.
-   
+
    RTS: Pyboard controls target's transmitter
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   
+
    If RTS flow control is enabled, behaviour is as follows:
-   
+
    If buffered input is used (``read_buf_len`` > 0), incoming characters are buffered.
    If the buffer becomes full, the next character to arrive will cause ``nRTS`` to go
    ``False``: the target should cease transmission. ``nRTS`` will go ``True`` when
    characters are read from the buffer.
-   
+
    Note that the ``any()`` method returns the number of bytes in the buffer. Assume a
    buffer length of ``N`` bytes. If the buffer becomes full, and another character arrives,
    ``nRTS`` will be set False, and ``any()`` will return the count ``N``. When
    characters are read the additional character will be placed in the buffer and will
    be included in the result of a subsequent ``any()`` call.
-   
+
    If buffered input is not used (``read_buf_len`` == 0) the arrival of a character will
    cause ``nRTS`` to go ``False`` until the character is read.
 """
@@ -87,12 +87,11 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AbstractBlockDev, AnyReadableBuf, AnyWritableBuf
 from abc import ABC, abstractmethod
-from typing import Any, Callable, ClassVar, Dict, Final, NoReturn, Protocol, Sequence, overload, runtime_checkable
-
-from uarray import array
-from uio import AnyReadableBuf, AnyWritableBuf
-from uos import AbstractBlockDev
+from array import array
+from collections.abc import Callable, Sequence
+from typing import Any, ClassVar, Dict, Final, NoReturn, Protocol, overload, runtime_checkable
 
 @runtime_checkable
 class _OldAbstractReadOnlyBlockDev(Protocol):
@@ -210,7 +209,7 @@ def hard_reset() -> NoReturn:
     """
 
 def bootloader() -> NoReturn:
-    """
+    r"""
     Activate the bootloader without BOOT\* pins.
     """
 
@@ -525,14 +524,7 @@ def main(filename: str, /) -> None:
     """
 
 @overload
-def mount(
-    device: _OldAbstractReadOnlyBlockDev,
-    mountpoint: str,
-    /,
-    *,
-    readonly: bool = False,
-    mkfs: bool = False,
-) -> None:
+def mount(device: _OldAbstractReadOnlyBlockDev, mountpoint: str, /, *, readonly: bool = False, mkfs: bool = False) -> None:
     """
     .. note:: This function is deprecated. Mounting and unmounting devices should
        be performed by :meth:`os.mount` and :meth:`os.umount` instead.
@@ -567,14 +559,7 @@ def mount(
     """
 
 @overload
-def mount(
-    device: _OldAbstractBlockDev,
-    mountpoint: str,
-    /,
-    *,
-    readonly: bool = False,
-    mkfs: bool = False,
-) -> None:
+def mount(device: _OldAbstractBlockDev, mountpoint: str, /, *, readonly: bool = False, mkfs: bool = False) -> None:
     """
     .. note:: This function is deprecated. Mounting and unmounting devices should
        be performed by :meth:`os.mount` and :meth:`os.umount` instead.
@@ -1290,16 +1275,7 @@ The operation mode of a filter used in :meth:`~CAN.setfilter()`.
         +-----------+----------------------+
         """
     @overload
-    def setfilter(
-        self,
-        bank: int,
-        mode: int,
-        fifo: int,
-        params: Sequence[int],
-        /,
-        *,
-        rtr: Sequence[bool],
-    ) -> None:
+    def setfilter(self, bank: int, mode: int, fifo: int, params: Sequence[int], /, *, rtr: Sequence[bool]) -> None:
         """
         Configure a filter bank:
 
@@ -1453,15 +1429,7 @@ The operation mode of a filter used in :meth:`~CAN.setfilter()`.
              # No heap memory is allocated in the following call
              can.recv(0, lst)
         """
-    def send(
-        self,
-        data: int | AnyWritableBuf,
-        id: int,
-        /,
-        *,
-        timeout: int = 0,
-        rtr: bool = False,
-    ) -> None:
+    def send(self, data: int | AnyWritableBuf, id: int, /, *, timeout: int = 0, rtr: bool = False) -> None:
         """
         Send a message on the bus:
 
@@ -1572,7 +1540,7 @@ class DAC:
    Circular mode (output buffer continuously) for `mode` argument of `write_timed`.
    """
     def __init__(self, port: int | Pin, /, bits: int = 8, *, buffering: bool | None = None):
-        """
+        r"""
         Construct a new DAC object.
 
         ``port`` can be a pin object, or an integer (1 or 2).
@@ -1617,7 +1585,7 @@ class DAC:
         the frequency of the repeating triangle wave itself is 8192 times smaller.
         """
     def write(self, value: int, /) -> None:
-        """
+        r"""
         Direct access to the DAC output.  The minimum value is 0.  The maximum
         value is 2\*\*``bits``-1, where ``bits`` is set when creating the DAC
         object or by using the ``init`` method.
@@ -1703,13 +1671,7 @@ interrupt on a rising edge
     """
 interrupt on a rising or falling edge
    """
-    def __init__(
-        self,
-        pin: int | str | Pin,
-        mode: int,
-        pull: int,
-        callback: Callable[[int], None],
-    ):
+    def __init__(self, pin: int | str | Pin, mode: int, pull: int, callback: Callable[[int], None]):
         """
         Create an ExtInt object:
 
@@ -1859,15 +1821,7 @@ for initialising the bus to controller mode
 for initialising the bus to peripheral mode
    """
     def __init__(
-        self,
-        bus: int | str,
-        mode: str,
-        /,
-        *,
-        addr: int = 0x12,
-        baudrate: int = 400_000,
-        gencall: bool = False,
-        dma: bool = False,
+        self, bus: int | str, mode: str, /, *, addr: int = 0x12, baudrate: int = 400_000, gencall: bool = False, dma: bool = False
     ):
         """
         Construct an I2C object on the given bus.  ``bus`` can be 1 or 2, 'X' or
@@ -1894,15 +1848,7 @@ for initialising the bus to peripheral mode
         Turn off the I2C bus.
         """
     def init(
-        self,
-        bus: int | str,
-        mode: str,
-        /,
-        *,
-        addr: int = 0x12,
-        baudrate: int = 400_000,
-        gencall: bool = False,
-        dma: bool = False,
+        self, bus: int | str, mode: str, /, *, addr: int = 0x12, baudrate: int = 400_000, gencall: bool = False, dma: bool = False
     ) -> None:
         """
         Initialise the I2C bus with the given parameters:
@@ -1920,16 +1866,7 @@ for initialising the bus to peripheral mode
         Check if an I2C device responds to the given address.  Only valid when in controller mode.
         """
     @overload
-    def mem_read(
-        self,
-        data: int,
-        addr: int,
-        memaddr: int,
-        /,
-        *,
-        timeout: int = 5000,
-        addr_size: int = 8,
-    ) -> bytes:
+    def mem_read(self, data: int, addr: int, memaddr: int, /, *, timeout: int = 5000, addr_size: int = 8) -> bytes:
         """
         Read from the memory of an I2C device:
 
@@ -1944,14 +1881,7 @@ for initialising the bus to peripheral mode
         """
     @overload
     def mem_read(
-        self,
-        data: AnyWritableBuf,
-        addr: int,
-        memaddr: int,
-        /,
-        *,
-        timeout: int = 5000,
-        addr_size: int = 8,
+        self, data: AnyWritableBuf, addr: int, memaddr: int, /, *, timeout: int = 5000, addr_size: int = 8
     ) -> AnyWritableBuf:
         """
         Read from the memory of an I2C device:
@@ -1966,14 +1896,7 @@ for initialising the bus to peripheral mode
         This is only valid in controller mode.
         """
     def mem_write(
-        self,
-        data: int | AnyWritableBuf,
-        addr: int,
-        memaddr: int,
-        /,
-        *,
-        timeout: int = 5000,
-        addr_size: int = 8,
+        self, data: int | AnyWritableBuf, addr: int, memaddr: int, /, *, timeout: int = 5000, addr_size: int = 8
     ) -> None:
         """
         Write to the memory of an I2C device:
@@ -1988,14 +1911,7 @@ for initialising the bus to peripheral mode
         This is only valid in controller mode.
         """
     @overload
-    def recv(
-        self,
-        recv: int,
-        addr: int = 0x00,
-        /,
-        *,
-        timeout: int = 5000,
-    ) -> bytes:
+    def recv(self, recv: int, addr: int = 0x00, /, *, timeout: int = 5000) -> bytes:
         """
         Receive data on the bus:
 
@@ -2008,14 +1924,7 @@ for initialising the bus to peripheral mode
         otherwise the same buffer that was passed in to ``recv``.
         """
     @overload
-    def recv(
-        self,
-        recv: AnyWritableBuf,
-        addr: int = 0x00,
-        /,
-        *,
-        timeout: int = 5000,
-    ) -> AnyWritableBuf:
+    def recv(self, recv: AnyWritableBuf, addr: int = 0x00, /, *, timeout: int = 5000) -> AnyWritableBuf:
         """
         Receive data on the bus:
 
@@ -2027,13 +1936,7 @@ for initialising the bus to peripheral mode
         Return value: if ``recv`` is an integer then a new buffer of the bytes received,
         otherwise the same buffer that was passed in to ``recv``.
         """
-    def send(
-        self,
-        addr: int = 0x00,
-        /,
-        *,
-        timeout: int = 5000,
-    ) -> None:
+    def send(self, addr: int = 0x00, /, *, timeout: int = 5000) -> None:
         """
         Send data on the bus:
 
@@ -2431,7 +2334,7 @@ class Pin:
       """
 
         MMA_INT: ClassVar[Pin] = ...
-        """
+        r"""
       Accelerometer (MMA7660) interrupt (\INT) pin.
       """
 
@@ -2890,6 +2793,7 @@ class Pin:
         """
       D2 pin.
       """
+
     AF_OD: ClassVar[int] = ...
     """
 initialise the pin to alternate-function mode with an open-drain drive
@@ -2934,16 +2838,7 @@ don't enable any pull up or down resistors on the pin
     """
 enable the pull-up resistor on the pin
    """
-    def __init__(
-        self,
-        id: Pin | str,
-        /,
-        mode: int = IN,
-        pull: int = PULL_NONE,
-        *,
-        value: Any = None,
-        alt: str | int = -1,
-    ):
+    def __init__(self, id: Pin | str, /, mode: int = IN, pull: int = PULL_NONE, *, value: Any = None, alt: str | int = -1):
         """
         Create a new Pin object associated with the id.  If additional arguments are given,
         they are used to initialise the pin.  See :meth:`pin.init`.
@@ -2962,13 +2857,13 @@ enable the pull-up resistor on the pin
         """
     @overload
     @staticmethod
-    def dict() -> Dict[str, Pin]:
+    def dict() -> dict[str, Pin]:
         """
         Get or set the pin mapper dictionary.
         """
     @overload
     @staticmethod
-    def dict(dict: Dict[str, Pin], /) -> None:
+    def dict(dict: dict[str, Pin], /) -> None:
         """
         Get or set the pin mapper dictionary.
         """
@@ -2984,14 +2879,7 @@ enable the pull-up resistor on the pin
         """
         Get or set the pin mapper function.
         """
-    def init(
-        self,
-        mode: int = IN,
-        pull: int = PULL_NONE,
-        *,
-        value: Any = None,
-        alt: str | int = -1,
-    ) -> None:
+    def init(self, mode: int = IN, pull: int = PULL_NONE, *, value: Any = None, alt: str | int = -1) -> None:
         """
         Initialise the pin:
 
@@ -3373,13 +3261,7 @@ class Servo:
         """
     @overload
     def calibration(
-        self,
-        pulse_min: int,
-        pulse_max: int,
-        pulse_centre: int,
-        pulse_angle_90: int,
-        pulse_speed_100: int,
-        /,
+        self, pulse_min: int, pulse_max: int, pulse_centre: int, pulse_angle_90: int, pulse_speed_100: int, /
     ) -> None:
         """
         If no arguments are given, this function returns the current calibration
@@ -3615,12 +3497,7 @@ set the first bit to be the least or most significant bit
         Return value: ``None``.
         """
     def send_recv(
-        self,
-        send: int | bytearray | array | bytes,
-        recv: AnyWritableBuf | None = None,
-        /,
-        *,
-        timeout: int = 5000,
+        self, send: int | bytearray | array | bytes, recv: AnyWritableBuf | None = None, /, *, timeout: int = 5000
     ) -> AnyWritableBuf:
         """
         Send and receive data on the bus at the same time:
@@ -3863,15 +3740,9 @@ class Timer:
         """
     @overload
     def init(
-        self,
-        *,
-        freq: int,
-        mode: int = UP,
-        div: int = 1,
-        callback: Callable[[Timer], None] | None = None,
-        deadtime: int = 0,
+        self, *, freq: int, mode: int = UP, div: int = 1, callback: Callable[[Timer], None] | None = None, deadtime: int = 0
     ) -> None:
-        """
+        r"""
         Initialise the timer.  Initialisation must be either by frequency (in Hz)
         or by prescaler and period::
 
@@ -3928,7 +3799,7 @@ class Timer:
         callback: Callable[[Timer], None] | None = None,
         deadtime: int = 0,
     ) -> None:
-        """
+        r"""
         Initialise the timer.  Initialisation must be either by frequency (in Hz)
         or by prescaler and period::
 
@@ -4403,13 +4274,7 @@ class Timer:
         """
     @overload
     def channel(
-        self,
-        channel: int,
-        /,
-        mode: int,
-        *,
-        callback: Callable[[Timer], None] | None = None,
-        pin: Pin | None = None,
+        self, channel: int, /, mode: int, *, callback: Callable[[Timer], None] | None = None, pin: Pin | None = None
     ) -> "TimerChannel":
         """
         If only a channel number is passed, then a previously initialized channel

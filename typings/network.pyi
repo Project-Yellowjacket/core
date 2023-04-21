@@ -45,7 +45,8 @@ __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython).
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
 from abc import abstractmethod
-from typing import Any, Callable, ClassVar, Final, Protocol, overload
+from collections.abc import Callable
+from typing import Any, ClassVar, Final, Protocol, overload
 
 import pyb
 
@@ -319,14 +320,7 @@ class WLAN:
         argument is passed. Otherwise, query current state if no argument is
         provided. Most other methods require active interface.
         """
-    def connect(
-        self,
-        ssid: str | None = None,
-        password: str | None = None,
-        /,
-        *,
-        bssid: bytes | None = None,
-    ) -> None:
+    def connect(self, ssid: str | None = None, password: str | None = None, /, *, bssid: bytes | None = None) -> None:
         """
         Connect to the specified wireless network, using the specified password.
         If *bssid* is given then the connection will be restricted to the
@@ -563,17 +557,7 @@ selects the antenna type
         values.
         """
     @overload
-    def __init__(
-        self,
-        id: int,
-        /,
-        *,
-        mode: int,
-        ssid: str,
-        auth: tuple[str, str],
-        channel: int,
-        antenna: int,
-    ):
+    def __init__(self, id: int, /, *, mode: int, ssid: str, auth: tuple[str, str], channel: int, antenna: int):
         """
         Create a WLAN object, and optionally configure it. See `init()` for params of configuration.
 
@@ -585,16 +569,7 @@ selects the antenna type
         initialized it will do the same as the other constructors an will initialize it with default
         values.
         """
-    def init(
-        self,
-        mode: int,
-        /,
-        *,
-        ssid: str,
-        auth: tuple[str, str],
-        channel: int,
-        antenna: int,
-    ) -> bool:
+    def init(self, mode: int, /, *, ssid: str, auth: tuple[str, str], channel: int, antenna: int) -> bool:
         """
         Set or get the WiFi network processor configuration.
 
@@ -621,13 +596,7 @@ selects the antenna type
            wlan.init(mode=WLAN.STA)
         """
     def connect(
-        self,
-        ssid: str,
-        /,
-        *,
-        auth: tuple[str, str] | None = None,
-        bssid: bytes | None = None,
-        timeout: int | None = None,
+        self, ssid: str, /, *, auth: tuple[str, str] | None = None, bssid: bytes | None = None, timeout: int | None = None
     ) -> None:
         """
         Connect to a WiFi access point using the given SSID, and other security
@@ -808,15 +777,7 @@ security type to use
 
           nic = network.CC3K(pyb.SPI(2), pyb.Pin.board.Y5, pyb.Pin.board.Y4, pyb.Pin.board.Y3)
         """
-    def connect(
-        self,
-        ssid: str,
-        key: str | None = None,
-        /,
-        *,
-        security: int = WPA2,
-        bssid: bytes | None = None,
-    ) -> None:
+    def connect(self, ssid: str, key: str | None = None, /, *, security: int = WPA2, bssid: bytes | None = None) -> None:
         """
         Connect to a WiFi access point using the given SSID, and other security
         parameters.

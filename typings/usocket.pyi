@@ -66,15 +66,15 @@ Tuple address format for ``socket`` module:
   they should be resolved first using `socket.getaddrinfo()`. Availability
   of IPv6 support depends on a :term:`MicroPython port`.
 
-   
+
 
    .. exception:: socket.error
-   
+
       MicroPython does NOT have this exception.
-   
+
       .. admonition:: Difference to CPython
            :class: attention
-   
+
            CPython used to have a ``socket.error`` exception which is now deprecated,
            and is an alias of `OSError`. In MicroPython, use `OSError` directly.
 """
@@ -84,18 +84,12 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
+from _typeshed import AnyReadableBuf, AnyWritableBuf
 from typing import Any, Final, Literal, overload
-
-from uio import AnyReadableBuf, AnyWritableBuf
 
 _Address: Final = tuple[str, int] | tuple[str, int, int, int] | str
 
-def socket(
-    af: int = "AF_INET",
-    type: int = "SOCK_STREAM",
-    proto: int = "IPPROTO_TCP",
-    /,
-) -> "Socket":
+def socket(af: int = "AF_INET", type: int = "SOCK_STREAM", proto: int = "IPPROTO_TCP", /) -> "Socket":
     """
     Create a new socket using the given address family, socket type and
     protocol number. Note that specifying *proto* in most cases is not
@@ -110,13 +104,7 @@ def socket(
     """
 
 def getaddrinfo(
-    host: str,
-    port: int,
-    af: int = 0,
-    type: int = 0,
-    proto: int = 0,
-    flags: int = 0,
-    /,
+    host: str, port: int, af: int = 0, type: int = 0, proto: int = 0, flags: int = 0, /
 ) -> list[tuple[int, int, int, str, tuple[str, int] | tuple[str, int, int, int]]]:
     """
     Translate the host/port argument into a sequence of 5-tuples that contain all the
