@@ -1,5 +1,5 @@
 import array
-from typing import Literal, Protocol, TypeAlias, TypeVar, overload, runtime_checkable
+from typing import Any, Literal, Protocol, TypeAlias, TypeVar, overload, runtime_checkable
 
 import uarray
 
@@ -82,9 +82,11 @@ _OpenFile: TypeAlias = StrOrBytesPath | int
 AnyPath: TypeAlias = str | bytes | PathLike[str] | PathLike[bytes]
 FdOrAnyPath: TypeAlias = int | AnyPath
 
+ReadableBuf: TypeAlias = bytearray | array.array[Any] | memoryview | bytes
 AnyReadableBuf = TypeVar("AnyReadableBuf", bytearray, array.array, memoryview, bytes)
 UAnyReadableBuf = TypeVar("UAnyReadableBuf", bytearray, uarray.array, memoryview, bytes)
 
+WritableBuf: TypeAlias = bytearray | array.array[Any] | memoryview
 AnyWritableBuf = TypeVar("AnyWritableBuf", bytearray, array.array, memoryview)
 UAnyWritableBuf = TypeVar("UAnyWritableBuf", bytearray, uarray.array, memoryview)
 
@@ -123,11 +125,6 @@ class AbstractBlockDev(Protocol):
     that the block device supports the extended interface.
     """
 
-    def __init__(self):
-        """
-        Construct a block device object.  The parameters to the constructor are
-        dependent on the specific block device.
-        """
     @overload
     def readblocks(self, block_num: int, buf: bytearray, /) -> None:
         """

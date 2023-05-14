@@ -1,67 +1,70 @@
-import os
+from collections import deque
+from time import ticks_diff, ticks_ms
 
-import adafruit_gps
-import adafruit_lsm9ds1
-import board
-import busio
+import lsm9ds1
 import machine
 import uasyncio
 
-from .radio import Radio
+from .barometer import Barometer
+from .utils.typing import TYPE_CHECKING, cast
 
-gps = adafruit_gps.GPS(busio.UART(board.TX, board.RX, baudrate=9600, timeout=10), debug=False)
-sensor = adafruit_lsm9ds1.LSM9DS1_I2C(board.I2C())
-radio = Radio(busio.SPI())
-sd = machine.SDCard()
-buzzer = machine.Pin(board.D7, machine.Pin.OUT, value=0)
-
-os.mount(sd, "/sd")
-
-
-async def init_gps():
-    # Turn on the basic GGA and RMC info
-    gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
-    # Set polling rate to 1Hz
-    gps.send_command(b"PMTK220,1000")
-    # love me some good string based API
-    while not gps.has_fix:
-        gps.update()
-        await uasyncio.sleep_ms(10)
+if TYPE_CHECKING:
+    from typing import TextIO
+accelerometer_internal = lsm9ds1.LSM9DS1(machine.I2C(1, scl=machine.Pin(15), sda=machine.Pin(14)))
+buzzer = machine.Pin(46, machine.Pin.OUT)
+barometer = Barometer(machine.I2C(1))
 
 
-def start_buzzer():
-    buzzer.value(1)
+async def start_buzzer():
+    while True:
+        buzzer.off()
+        await uasyncio.sleep(50e-6)
+        buzzer.on()
+        await uasyncio.sleep(100e-6)
+
+
+def normalised_acceleration() -> tuple[float, float, float]:
+    z, x, y = accelerometer_internal.accel()
+    return -x * 9.81, y * 9.81, -z * 9.81
 
 
 async def main():
-    with open("/sd/log.txt", "w+") as log:
-        # log = cast(BinaryIO, log)  # not sure why this isn't being inferred
-        launched = False
+    await uasyncio.wait_for(start_buzzer(), 3)
+    await uasyncio.sleep(30 * 60)
+    await uasyncio.wait_for(start_buzzer(), 5)
+    accels = deque((), 3)
+    with open("log.txt", "w+") as log:
+        log = cast("TextIO", log)
         hit_apogee = False
-        uasyncio.create_task(radio.send_loop())
-
+        await barometer.initialize()
         log.write("Starting the main loop")
-
+        max_accel = 0.0
+        max_height = 0.0
+        launch_time = 0
         while True:
-            accel_x, accel_y, accel_z = sensor.acceleration
-
-            if accel_z > 9.81:
-                log.write("Detected launch, starting GPS")
+            accel_x, accel_y, accel_z = normalised_acceleration()
+            if accel_z > max_accel:
+                max_accel = accel_z
+            height = await barometer.altitude()
+            accels.append(accel_z)
+            rolling_total = sum(accels)
+            if height > max_height:
+                max_height = height
+            if rolling_total > 30:
+                log.write("L")
                 launched = True
-                await init_gps()
+                launch_time = ticks_ms()
 
-            if accel_z < 0:  # might need a running mean for a bit?
+            if rolling_total < 0:
                 if hit_apogee:
-                    hit_ground = True
-                    log.write("Hit the ground starting the buzzer")
-                    start_buzzer()
+                    log.write("H {}".format(ticks_diff(ticks_ms(), launch_time)))
+                    log.write("{} {}".format(max_accel, max_height))
+
+                    await uasyncio.wait_for(start_buzzer(), 30 * 60)
                     break
                 else:
+                    log.write(f"A {ticks_diff(ticks_ms(), launch_time)}s")
                     hit_apogee = True
-
-            if launched:
-                ...
-    await uasyncio.sleep_ms(30 * 60 * 1000)  # if we can't find it in 30 minutes then it's probably lost anyway
 
 
 if __name__ == "__main__":

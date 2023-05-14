@@ -31,9 +31,10 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from _typeshed import AbstractBlockDev, AnyReadableBuf, AnyWritableBuf
 from collections.abc import Callable, Sequence
 from typing import Any, ClassVar, Final, NoReturn, overload
+
+from _typeshed import AbstractBlockDev, ReadableBuf, WritableBuf
 
 def reset() -> NoReturn:
     """
@@ -329,6 +330,497 @@ class Pin:
         p0.irq(lambda p:print(p))
     """
 
+    # noinspection PyPep8Naming
+    class board:
+        """
+        The board pins (board nomenclature, e.g. `X1`) that are bought out onto pads on a PyBoard.
+        """
+
+        LED_BLUE: ClassVar[Pin] = ...
+        """
+      The blue LED.
+      """
+
+        LED_GREEN: ClassVar[Pin] = ...
+        """
+      The green LED.
+      """
+
+        LED_RED: ClassVar[Pin] = ...
+        """
+      The red LED.
+      """
+
+        LED_YELLOW: ClassVar[Pin] = ...
+        """
+      The yellow LED.
+      """
+
+        MMA_AVDD: ClassVar[Pin] = ...
+        """
+      Accelerometer (MMA7660) analogue power (AVDD) pin.
+      """
+
+        MMA_INT: ClassVar[Pin] = ...
+        r"""
+      Accelerometer (MMA7660) interrupt (\INT) pin.
+      """
+
+        SD: ClassVar[Pin] = ...
+        """
+      SD card present switch (0 for card inserted, 1 for no card) (same as SD_SW).
+      """
+
+        SD_CK: ClassVar[Pin] = ...
+        """
+      SD card clock.
+      """
+
+        SD_CMD: ClassVar[Pin] = ...
+        """
+      SD card command.
+      """
+
+        SD_D0: ClassVar[Pin] = ...
+        """
+      SD card serial data 0.
+      """
+
+        SD_D1: ClassVar[Pin] = ...
+        """
+      SD card serial data 1.
+      """
+
+        SD_D2: ClassVar[Pin] = ...
+        """
+      SD card serial data 2.
+      """
+
+        SD_D3: ClassVar[Pin] = ...
+        """
+      SD card serial data 3.
+      """
+
+        SD_SW: ClassVar[Pin] = ...
+        """
+      SD card present switch (0 for card inserted, 1 for no card) (same as SD).
+      """
+
+        SW: ClassVar[Pin] = ...
+        """
+      Usr switch (0 = pressed, 1 = not pressed).
+      """
+
+        USB_DM: ClassVar[Pin] = ...
+        """
+      USB data -.
+      """
+
+        USB_DP: ClassVar[Pin] = ...
+        """
+      USB data +.
+      """
+
+        USB_ID: ClassVar[Pin] = ...
+        """
+      USB OTG (on-the-go) ID.
+      """
+
+        USB_VBUS: ClassVar[Pin] = ...
+        """
+      USB VBUS (power) monitoring pin.
+      """
+
+        X1: ClassVar[Pin] = ...
+        """
+      X1 pin.
+      """
+
+        X10: ClassVar[Pin] = ...
+        """
+      X10 pin.
+      """
+
+        X11: ClassVar[Pin] = ...
+        """
+      X11 pin.
+      """
+
+        X12: ClassVar[Pin] = ...
+        """
+      X12 pin.
+      """
+
+        X17: ClassVar[Pin] = ...
+        """
+      X17 pin.
+      """
+
+        X18: ClassVar[Pin] = ...
+        """
+      X18 pin.
+      """
+
+        X19: ClassVar[Pin] = ...
+        """
+      X19 pin.
+      """
+
+        X2: ClassVar[Pin] = ...
+        """
+      X2 pin.
+      """
+
+        X20: ClassVar[Pin] = ...
+        """
+      X20 pin.
+      """
+
+        X21: ClassVar[Pin] = ...
+        """
+      X21 pin.
+      """
+
+        X22: ClassVar[Pin] = ...
+        """
+      X22 pin.
+      """
+
+        X3: ClassVar[Pin] = ...
+        """
+      X3 pin.
+      """
+
+        X4: ClassVar[Pin] = ...
+        """
+      X4 pin.
+      """
+
+        X5: ClassVar[Pin] = ...
+        """
+      X5 pin.
+      """
+
+        X6: ClassVar[Pin] = ...
+        """
+      X6 pin.
+      """
+
+        X7: ClassVar[Pin] = ...
+        """
+      X7 pin.
+      """
+
+        X8: ClassVar[Pin] = ...
+        """
+      X8 pin.
+      """
+
+        X9: ClassVar[Pin] = ...
+        """
+      X9 pin.
+      """
+
+        Y1: ClassVar[Pin] = ...
+        """
+      Y1 pin.
+      """
+
+        Y10: ClassVar[Pin] = ...
+        """
+      Y10 pin.
+      """
+
+        Y11: ClassVar[Pin] = ...
+        """
+      Y11 pin.
+      """
+
+        Y12: ClassVar[Pin] = ...
+        """
+      Y12 pin.
+      """
+
+        Y2: ClassVar[Pin] = ...
+        """
+      Y2 pin.
+      """
+
+        Y3: ClassVar[Pin] = ...
+        """
+      Y3 pin.
+      """
+
+        Y4: ClassVar[Pin] = ...
+        """
+      Y4 pin.
+      """
+
+        Y5: ClassVar[Pin] = ...
+        """
+      Y5 pin.
+      """
+
+        Y6: ClassVar[Pin] = ...
+        """
+      Y6 pin.
+      """
+
+        Y7: ClassVar[Pin] = ...
+        """
+      Y7 pin.
+      """
+
+        Y8: ClassVar[Pin] = ...
+        """
+      Y8 pin.
+      """
+
+        Y9: ClassVar[Pin] = ...
+        """
+      Y9 pin.
+      """
+
+    # noinspection PyPep8Naming
+    class cpu:
+        """
+        The CPU pins (CPU nomenclature, e.g. `A0`) that are bought out onto pads on a PyBoard.
+        """
+
+        A0: ClassVar[Pin] = ...
+        """
+      A0 pin.
+      """
+
+        A1: ClassVar[Pin] = ...
+        """
+      A1 pin.
+      """
+
+        A10: ClassVar[Pin] = ...
+        """
+      A10 pin.
+      """
+
+        A11: ClassVar[Pin] = ...
+        """
+      A11 pin.
+      """
+
+        A12: ClassVar[Pin] = ...
+        """
+      A12 pin.
+      """
+
+        A13: ClassVar[Pin] = ...
+        """
+      A13 pin.
+      """
+
+        A14: ClassVar[Pin] = ...
+        """
+      A14 pin.
+      """
+
+        A15: ClassVar[Pin] = ...
+        """
+      A15 pin.
+      """
+
+        A2: ClassVar[Pin] = ...
+        """
+      A2 pin.
+      """
+
+        A3: ClassVar[Pin] = ...
+        """
+      A3 pin.
+      """
+
+        A4: ClassVar[Pin] = ...
+        """
+      A4 pin.
+      """
+
+        A5: ClassVar[Pin] = ...
+        """
+      A5 pin.
+      """
+
+        A6: ClassVar[Pin] = ...
+        """
+      A6 pin.
+      """
+
+        A7: ClassVar[Pin] = ...
+        """
+      A7 pin.
+      """
+
+        A8: ClassVar[Pin] = ...
+        """
+      A8 pin.
+      """
+
+        A9: ClassVar[Pin] = ...
+        """
+      A9 pin.
+      """
+
+        B0: ClassVar[Pin] = ...
+        """
+      B0 pin.
+      """
+
+        B1: ClassVar[Pin] = ...
+        """
+      B1 pin.
+      """
+
+        B10: ClassVar[Pin] = ...
+        """
+      B10 pin.
+      """
+
+        B11: ClassVar[Pin] = ...
+        """
+      B11 pin.
+      """
+
+        B12: ClassVar[Pin] = ...
+        """
+      B12 pin.
+      """
+
+        B13: ClassVar[Pin] = ...
+        """
+      B13 pin.
+      """
+
+        B14: ClassVar[Pin] = ...
+        """
+      B14 pin.
+      """
+
+        B15: ClassVar[Pin] = ...
+        """
+      B15 pin.
+      """
+
+        B2: ClassVar[Pin] = ...
+        """
+      B2 pin.
+      """
+
+        B3: ClassVar[Pin] = ...
+        """
+      B3 pin.
+      """
+
+        B4: ClassVar[Pin] = ...
+        """
+      B4 pin.
+      """
+
+        B5: ClassVar[Pin] = ...
+        """
+      B5 pin.
+      """
+
+        B6: ClassVar[Pin] = ...
+        """
+      B6 pin.
+      """
+
+        B7: ClassVar[Pin] = ...
+        """
+      B7 pin.
+      """
+
+        B8: ClassVar[Pin] = ...
+        """
+      B8 pin.
+      """
+
+        B9: ClassVar[Pin] = ...
+        """
+      B9 pin.
+      """
+
+        C0: ClassVar[Pin] = ...
+        """
+      C0 pin.
+      """
+
+        C1: ClassVar[Pin] = ...
+        """
+      C1 pin.
+      """
+
+        C10: ClassVar[Pin] = ...
+        """
+      C10 pin.
+      """
+
+        C11: ClassVar[Pin] = ...
+        """
+      C11 pin.
+      """
+
+        C12: ClassVar[Pin] = ...
+        """
+      C12 pin.
+      """
+
+        C13: ClassVar[Pin] = ...
+        """
+      C13 pin.
+      """
+
+        C2: ClassVar[Pin] = ...
+        """
+      C2 pin.
+      """
+
+        C3: ClassVar[Pin] = ...
+        """
+      C3 pin.
+      """
+
+        C4: ClassVar[Pin] = ...
+        """
+      C4 pin.
+      """
+
+        C5: ClassVar[Pin] = ...
+        """
+      C5 pin.
+      """
+
+        C6: ClassVar[Pin] = ...
+        """
+      C6 pin.
+      """
+
+        C7: ClassVar[Pin] = ...
+        """
+      C7 pin.
+      """
+
+        C8: ClassVar[Pin] = ...
+        """
+      C8 pin.
+      """
+
+        C9: ClassVar[Pin] = ...
+        """
+      C9 pin.
+      """
+
+        D2: ClassVar[Pin] = ...
+        """
+      D2 pin.
+      """
     IN: ClassVar[int] = ...
     """
 Selects the pin mode.
@@ -412,7 +904,15 @@ Selects the IRQ trigger type.
 Selects the IRQ trigger type.
    """
     def __init__(
-        self, id: Any, /, mode: int = -1, pull: int = -1, *, value: Any = None, drive: int | None = None, alt: int | None = None
+        self,
+        id: Any,
+        /,
+        mode: int = -1,
+        pull: int = -1,
+        *,
+        value: Any = None,
+        drive: int | None = None,
+        alt: int | None = None,
     ):
         """
         Access the pin peripheral (GPIO pin) associated with the given ``id``.  If
@@ -669,7 +1169,7 @@ Selects the IRQ trigger type.
         Availability: cc3200, stm32 ports.
         """
     @overload
-    def dive(self) -> int:
+    def drive(self) -> int:
         """
         Get or set the pin drive strength.
         See the constructor documentation for details of the ``drive`` argument.
@@ -1297,7 +1797,7 @@ IRQ trigger sources
         on timeout.
         """
     @overload
-    def readinto(self, buf: AnyWritableBuf, /) -> int | None:
+    def readinto(self, buf: WritableBuf, /) -> int | None:
         """
         Read bytes into the ``buf``.  If ``nbytes`` is specified then read at most
         that many bytes.  Otherwise, read at most ``len(buf)`` bytes. It may return sooner if a timeout
@@ -1307,7 +1807,7 @@ IRQ trigger sources
         timeout.
         """
     @overload
-    def readinto(self, buf: AnyWritableBuf, nbytes: int, /) -> int | None:
+    def readinto(self, buf: WritableBuf, nbytes: int, /) -> int | None:
         """
         Read bytes into the ``buf``.  If ``nbytes`` is specified then read at most
         that many bytes.  Otherwise, read at most ``len(buf)`` bytes. It may return sooner if a timeout
@@ -1323,7 +1823,7 @@ IRQ trigger sources
 
         Return value: the line read or ``None`` on timeout.
         """
-    def write(self, buf: AnyReadableBuf, /) -> int | None:
+    def write(self, buf: ReadableBuf, /) -> int | None:
         """
         Write the buffer of bytes to the bus.
 
@@ -1334,7 +1834,9 @@ IRQ trigger sources
         Send a break condition on the bus. This drives the bus low for a duration
         longer than required for a normal transmission of a character.
         """
-    def irq(self, trigger: int, priority: int = 1, handler: Callable[[UART], None] | None = None, wake: int = IDLE, /) -> Any:
+    def irq(
+        self, trigger: int, priority: int = 1, handler: Callable[[UART], None] | None = None, wake: int = IDLE, /
+    ) -> Any:
         """
         Create a callback to be triggered when data is received on the UART.
 
@@ -1564,7 +2066,7 @@ set the first bit to be the least significant bit
         the single byte given by ``write``.
         Returns a ``bytes`` object with the data that was read.
         """
-    def readinto(self, buf: AnyWritableBuf, write: int = 0x00, /) -> int | None:
+    def readinto(self, buf: WritableBuf, write: int = 0x00, /) -> int | None:
         """
         Read into the buffer specified by ``buf`` while continuously writing the
         single byte given by ``write``.
@@ -1572,14 +2074,14 @@ set the first bit to be the least significant bit
 
         Note: on WiPy this function returns the number of bytes read.
         """
-    def write(self, buf: AnyReadableBuf, /) -> int | None:
+    def write(self, buf: ReadableBuf, /) -> int | None:
         """
         Write the bytes contained in ``buf``.
         Returns ``None``.
 
         Note: on WiPy this function returns the number of bytes written.
         """
-    def write_readinto(self, write_buf: AnyReadableBuf, read_buf: AnyWritableBuf, /) -> int | None:
+    def write_readinto(self, write_buf: ReadableBuf, read_buf: WritableBuf, /) -> int | None:
         """
         Write the bytes from ``write_buf`` while reading into ``read_buf``.  The
         buffers can be the same or different, but both buffers must have the
@@ -1717,7 +2219,7 @@ class I2C:
 
         These methods are only available on the `machine.SoftI2C` class.
         """
-    def readinto(self, buf: AnyWritableBuf, nack: bool = True, /) -> None:
+    def readinto(self, buf: WritableBuf, nack: bool = True, /) -> None:
         """
         Reads bytes from the bus and stores them into *buf*.  The number of bytes
         read is the length of *buf*.  An ACK will be sent on the bus after
@@ -1735,7 +2237,7 @@ class I2C:
 
         These methods are only available on the `machine.SoftI2C` class.
         """
-    def write(self, buf: AnyReadableBuf, /) -> int:
+    def write(self, buf: ReadableBuf, /) -> int:
         """
         Write the bytes from *buf* to the bus.  Checks that an ACK is received
         after each byte and stops transmitting the remaining bytes if a NACK is
@@ -1764,7 +2266,7 @@ class I2C:
         The following methods implement the standard I2C controller read and write
         operations that target a given peripheral device.
         """
-    def readfrom_into(self, addr: int, buf: AnyWritableBuf, stop: bool = True, /) -> None:
+    def readfrom_into(self, addr: int, buf: WritableBuf, stop: bool = True, /) -> None:
         """
         Read into *buf* from the peripheral specified by *addr*.
         The number of bytes read will be the length of *buf*.
@@ -1779,7 +2281,7 @@ class I2C:
         The following methods implement the standard I2C controller read and write
         operations that target a given peripheral device.
         """
-    def writeto(self, addr: int, buf: AnyReadableBuf, stop: bool = True, /) -> int:
+    def writeto(self, addr: int, buf: ReadableBuf, stop: bool = True, /) -> int:
         """
         Write the bytes from *buf* to the peripheral specified by *addr*.  If a
         NACK is received following the write of a byte from *buf* then the
@@ -1794,7 +2296,7 @@ class I2C:
         The following methods implement the standard I2C controller read and write
         operations that target a given peripheral device.
         """
-    def writevto(self, addr: int, vector: Sequence[AnyReadableBuf], stop: bool = True, /) -> int:
+    def writevto(self, addr: int, vector: Sequence[ReadableBuf], stop: bool = True, /) -> int:
         """
         Write the bytes contained in *vector* to the peripheral specified by *addr*.
         *vector* should be a tuple or list of objects with the buffer protocol.
@@ -1831,7 +2333,7 @@ class I2C:
         I2C transaction: the peripheral address and the memory address.  The following
         methods are convenience functions to communicate with such devices.
         """
-    def readfrom_mem_into(self, addr: int, memaddr: int, buf: AnyWritableBuf, /, *, addrsize: int = 8) -> None:
+    def readfrom_mem_into(self, addr: int, memaddr: int, buf: WritableBuf, /, *, addrsize: int = 8) -> None:
         """
         Read into *buf* from the peripheral specified by *addr* starting from the
         memory address specified by *memaddr*.  The number of bytes read is the
@@ -1850,7 +2352,7 @@ class I2C:
         I2C transaction: the peripheral address and the memory address.  The following
         methods are convenience functions to communicate with such devices.
         """
-    def writeto_mem(self, addr: int, memaddr: int, buf: AnyReadableBuf, /, *, addrsize: int = 8) -> None:
+    def writeto_mem(self, addr: int, memaddr: int, buf: ReadableBuf, /, *, addrsize: int = 8) -> None:
         """
         Write *buf* to the peripheral specified by *addr* starting from the
         memory address specified by *memaddr*.
@@ -1958,7 +2460,9 @@ for initialising the I2S bus ``format`` to stereo
     """
 for initialising the I2S bus ``format`` to mono
    """
-    def __init__(self, id: int, /, *, sck: Pin, ws: Pin, sd: Pin, mode: int, bits: int, format: int, rate: int, ibuf: int):
+    def __init__(
+        self, id: int, /, *, sck: Pin, ws: Pin, sd: Pin, mode: int, bits: int, format: int, rate: int, ibuf: int
+    ):
         """
         Construct an I2S object of the given id:
 
@@ -1994,14 +2498,14 @@ for initialising the I2S bus ``format`` to mono
         """
         Deinitialize the I2S bus
         """
-    def readinto(self, buf: AnyWritableBuf, /) -> int:
+    def readinto(self, buf: WritableBuf, /) -> int:
         """
         Read audio samples into the buffer specified by ``buf``.  ``buf`` must support the buffer protocol, such as bytearray or array.
         "buf" byte ordering is little-endian.  For Stereo format, left channel sample precedes right channel sample. For Mono format,
         the left channel sample data is used.
         Returns number of bytes read
         """
-    def write(self, buf: AnyReadableBuf, /) -> int:
+    def write(self, buf: ReadableBuf, /) -> int:
         """
         Write audio samples contained in ``buf``. ``buf`` must support the buffer protocol, such as bytearray or array.
         "buf" byte ordering is little-endian.  For Stereo format, left channel sample precedes right channel sample. For Mono format,
@@ -2015,7 +2519,7 @@ for initialising the I2S bus ``format`` to mono
         ``handler`` is called in the context of the MicroPython scheduler.
         """
     @staticmethod
-    def shift(buf: AnyWritableBuf, bits: int, shift: int, /) -> None:
+    def shift(buf: WritableBuf, bits: int, shift: int, /) -> None:
         """
         bitwise shift of all samples contained in ``buf``. ``bits`` specifies sample size in bits. ``shift`` specifies the number of bits to shift each sample.
         Positive for left shift, negative for right shift.
@@ -2287,7 +2791,9 @@ Timer operating mode.
         See ``init`` for parameters of initialisation.
         """
     @overload
-    def __init__(self, id: int, /, *, mode: int = PERIODIC, period: int = -1, callback: Callable[[Timer], None] | None = None):
+    def __init__(
+        self, id: int, /, *, mode: int = PERIODIC, period: int = -1, callback: Callable[[Timer], None] | None = None
+    ):
         """
         Construct a new timer object of the given ``id``. ``id`` of -1 constructs a
         virtual timer (if supported by a board).
@@ -2391,7 +2897,9 @@ class SD:
         """
         Create a SD card object. See ``init()`` for parameters if initialization.
         """
-    def init(self, id: int = 0, pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"), /) -> None:
+    def init(
+        self, id: int = 0, pins: tuple[str, str, str] | tuple[Pin, Pin, Pin] = ("GP10", "GP11", "GP15"), /
+    ) -> None:
         """
         Enable the SD card. In order to initialize the card, give it a 3-tuple:
         ``(clk_pin, cmd_pin, dat0_pin)``.

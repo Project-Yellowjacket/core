@@ -375,6 +375,17 @@ pyserial = ">=3.0"
 pyusb = ">=1.0.0,<1.2.0 || >1.2.0"
 
 [[package]]
+name = "pyreadline"
+version = "2.1"
+description = "A python implmementation of GNU readline."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyreadline-2.1.zip", hash = "sha256:4530592fc2e85b25b1a9f79664433da09237c1a270e4d78ea5aa3a2c7229e2d1"},
+]
+
+[[package]]
 name = "pyserial"
 version = "3.5"
 description = "Python Serial Port Extension"
@@ -390,6 +401,18 @@ files = [
 cp2110 = ["hidapi"]
 
 [[package]]
+name = "pyudev"
+version = "0.24.1"
+description = "A libudev binding"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pyudev-0.24.1-py3-none-any.whl", hash = "sha256:da7e977be15fb5eccf8797b8e2176cd5b4f39288707cdcb39d1cabe7c8793e2b"},
+    {file = "pyudev-0.24.1.tar.gz", hash = "sha256:75e54d37218f5ac45b0da1f0fd9cc5e526a3cac3ef1cfad410cf7ab338b01471"},
+]
+
+[[package]]
 name = "pyusb"
 version = "1.2.1"
 description = "Python USB access module"
@@ -400,6 +423,22 @@ files = [
     {file = "pyusb-1.2.1-py3-none-any.whl", hash = "sha256:2b4c7cb86dbadf044dfb9d3a4ff69fd217013dbe78a792177a3feb172449ea36"},
     {file = "pyusb-1.2.1.tar.gz", hash = "sha256:a4cc7404a203144754164b8b40994e2849fde1cfff06b08492f12fff9d9de7b9"},
 ]
+
+[[package]]
+name = "rshell"
+version = "0.0.31"
+description = "A remote shell for working with MicroPython boards."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "rshell-0.0.31.tar.gz", hash = "sha256:7942b758a9ae5c6ff46516b0317f437dfce9f0721f3a3b635ebd501c9cd38fb9"},
+]
+
+[package.dependencies]
+pyreadline = {version = "*", markers = "sys_platform == \"win32\""}
+pyserial = "*"
+pyudev = ">=0.16"
 
 [[package]]
 name = "tomli"
@@ -428,4 +467,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "fa16ce39ffefe4d1e6babb66a706bf3d2a1ea623262b7a2abb691f69de114788"
+content-hash = "f11b9265b619e547ce25cdbfdf12e60f61fb4a76ebdd7f67b5816fba5f5d2af4"

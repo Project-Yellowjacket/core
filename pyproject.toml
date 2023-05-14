@@ -4,6 +4,8 @@ reportMissingModuleSource = "none"
 reportMissingTypeStubs = false
 reportShadowedImports = false
 # typeshedPath = "typeshed"
+defineConstant = {TYPE_CHECKING_SHIM = true}
+reportPrivateUsage = false
 
 [tool.black]
 line-length = 120
@@ -12,18 +14,18 @@ extend_exclude = "typings"
 [tool.isort]
 profile = "black"
 line_length = 120
-extend_exclude = "typings"
+extend_skip = ["typings"]
 
 [tool.ruff]
 line-length = 120
 
 [tool.poe.tasks]
 build = {script = "scripts.build:main", help = "Generate the required files for upload to the board."}
-install = {script = "scripts.install:main", help = "Upload the current contents of the dist folder to the board."}
+install = {script = "scripts.upload:main", help = "Upload the current contents of the dist folder to the board."}
 develop = {sequence = ["build", "install"], help = "Build and install the current project."}
-_black = "black ."
-_isort = "isort ."
-fmt = {sequence = ["_black", "_isort"], help = "Format all files"}
+# run = {}
+repl = {cmd = "rshell repl"}
+fmt = {sequence = [{cmd = "black ."}, {cmd = "isort ."}], help = "Format all files"}
 
 [tool.poetry]
 name = "core"
@@ -39,6 +41,7 @@ adafruit-circuitpython-icm20x = "^2.0.16"
 adafruit-circuitpython-dps310 = "^2.1.10"
 adafruit-circuitpython-lsm9ds1 = "^2.1.19"
 poethepoet = "^0.19.0"
+rshell = "^0.0.31"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

@@ -37,10 +37,11 @@ __copyright__ = "Howard C Lovatt, 2020 onwards."
 __license__ = "MIT https://opensource.org/licenses/MIT (as used by MicroPython)."
 __version__ = "7.5.3"  # Version set by https://github.com/hlovatt/tag2ver
 
-from _typeshed import AnyReadableBuf
 from abc import ABC
 from collections.abc import Awaitable, Callable, Coroutine, Generator, Iterable, Iterator
-from typing import Any, Dict, Generic, TypeAlias, TypeVar
+from typing import Any, Dict, Generic, Self, TypeAlias, TypeVar
+
+from _typeshed import AnyReadableBuf
 
 _T = TypeVar("_T")
 # `Coroutine` `_T` is covariant and `Awaitable` `_T` is invariant.
@@ -157,7 +158,11 @@ def open_connection(host: str | None, port: str | int | None, /) -> Awaitable[tu
     """
 
 def start_server(
-    callback: Callable[[StreamReader, StreamWriter], None], host: str | None, port: str | int | None, backlog: int = 5, /
+    callback: Callable[[StreamReader, StreamWriter], None],
+    host: str | None,
+    port: str | int | None,
+    backlog: int = 5,
+    /,
 ) -> Awaitable[Server]:
     """
     Start a TCP server on the given *host* and *port*.  The *callback* will be
@@ -266,7 +271,7 @@ class ThreadSafeFlag:
         This is a coroutine.
         """
 
-class Lock(Awaitable[None], ABC):
+class Lock:
     """
     class Lock
     ----------
@@ -296,6 +301,8 @@ class Lock(Awaitable[None], ABC):
         queue is scheduled to run and the lock remains locked.  Otherwise, no tasks are
         waiting an the lock becomes unlocked.
         """
+    async def __aenter__(self) -> Self: ...
+    async def __aexit__(self, *args: Any) -> None: ...
 
 class Stream:
     """ """

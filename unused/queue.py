@@ -1,8 +1,8 @@
 """Apparently there is no queue implementation in uasyncio so we need our own."""
 
-from typing import Generic, TypeVar
-
 import uasyncio
+
+from .typing import Generic, TypeVar
 
 T = TypeVar("T")
 
